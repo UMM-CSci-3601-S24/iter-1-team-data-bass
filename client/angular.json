@@ -30,9 +30,7 @@
               "src/assets"
             ],
             "styles": [
-              // "node_modules/bootstrap/dist/css/bootstrap.min.scss",
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",
-              // "src/styles.css",
               "src/styles.scss"
             ],
             "scripts": ["node_modules/@popperjs/core/dist/umd/popper.min.js",
@@ -109,7 +107,6 @@
               "src/assets"
             ],
             "styles": [
-              // "src/assets/bootstrap.min.css",
               "src/styles.scss"
             ],
             "scripts": []
