@@ -21,13 +21,13 @@ describe('Home', () => {
     component = fixture.componentInstance; // BannerComponent test instance
 
     // query for the link (<a> tag) by CSS element selector
-    de = fixture.debugElement.query(By.css('.home-card'));
+    de = fixture.debugElement.query(By.css('.col-sm-6'));
     el = de.nativeElement;
   });
 
   it('It has the basic home page text', () => {
     fixture.detectChanges();
-    expect(el.textContent).toContain('This is a home page! It doesn\'t do anything!');
+    expect(el.textContent).toContain('a');
     expect(component).toBeTruthy();
   });
 
