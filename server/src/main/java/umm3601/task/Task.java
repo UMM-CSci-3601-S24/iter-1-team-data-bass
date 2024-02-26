@@ -13,6 +13,7 @@ public class Task {
   public String description;
   public int position;
   public String Huntid;
+public boolean isDone;
 
   @Override
   public boolean equals(Object obj) {

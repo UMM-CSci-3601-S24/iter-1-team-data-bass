@@ -4,6 +4,7 @@ import static com.mongodb.client.model.Filters.eq;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.bson.UuidRepresentation;
 import org.bson.conversions.Bson;
@@ -45,37 +46,42 @@ public class TaskController implements Controller {
   }
 
   /**
-   * Set the JSON body of the response to be the single user
-   * specified by the `id` parameter in the request
+   * Set the JSON body of the response to be a list of all the tasks returned from the database
+   * that match any requested filters and ordering
    *
    * @param ctx a Javalin HTTP context
    */
-  public void getTask(Context ctx) {
-    String id = ctx.pathParam("id");
-    Task task;
+  public void getTasks(Context ctx) {
+    System.err.println(ctx);
+    System.err.println(Task.class);
 
-    try {
-      task = taskCollection.find(eq("_id", new ObjectId(id))).first();
-    } catch (IllegalArgumentException e) {
-      throw new BadRequestResponse("The requested user id wasn't a legal Mongo Object ID.");
-    }
-    if (task == null) {
-      throw new NotFoundResponse("The requested user was not found");
-    } else {
-      ctx.json(task);
-      ctx.status(HttpStatus.OK);
-    }
+    // Explicitly set the context status to OK
+    ctx.status(HttpStatus.OK);
   }
 
-  private Object addNewTask(@NotNull Context ctx) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'addNewTask'");
+  void addNewTask(Context ctx) {
+    Task newTask = ctx.bodyValidator(Task.class)
+      .check((Task task) -> task.description != null && task.description.length() > 0, "Description must not be null or empty")
+      .check((Task task) -> task.position >= 0, "Position must be greater than or equal to 0")
+      .check((Task task) -> task.Huntid != null && task.Huntid.length() > 0, "HuntId must not be null or empty")
+      .get();
+
+    taskCollection.insertOne(newTask);
+
+    ctx.json(Map.of("id", newTask._id));
+
+    ctx.status(HttpStatus.CREATED);
   }
 
-  public boolean markTaskAsDone(String taskId) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'markTaskAsDone'");
+public boolean markTaskAsDone(@NotNull String taskId) {
+  Task task = taskCollection.find(eq("_id", new ObjectId(taskId))).first();
+  if (task == null) {
+    throw new NotFoundResponse("The requested task was not found");
   }
+  task.isDone = true;
+  taskCollection.replaceOne(eq("_id", new ObjectId(taskId)), task);
+  return true;
+}
 
   public List<Task> arrangeTasks(List<Task> tasks) {
     // TODO Auto-generated method stub

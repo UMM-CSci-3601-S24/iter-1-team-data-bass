@@ -22,6 +22,7 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.json.JavalinJackson;
+import io.javalin.validation.BodyValidator;
 
 import static com.mongodb.client.model.Filters.eq;
 import static org.junit.jupiter.api.Assertions.*;
@@ -139,19 +140,29 @@ class TaskControllerSpec {
     verify(mockServer, Mockito.atLeastOnce()).delete(any(), any());
   }
 
+  // testing adding a new task.
   @Test
-  void testAddTask() {
-    // Arrange
-    TaskController taskController = new TaskController(null);
-    Task newTask = new Task(); // Assuming Task is a class representing a task
-    // Set properties on newTask as needed
+  void addTask() throws IOException {
+    String testNewTask = """
+        {
+          "description": "test description",
+          "position": 1,
+          "HuntId": testHuntId
+        }
+        """;
+    when(ctx.bodyValidator(Task.class))
+        .then(value -> new BodyValidator<>(testNewTask, Task.class, javalinJackson));
 
-    // Act
-    Task addedTask = taskController.addTask(newTask);
+    taskController.addNewTask(ctx);
+    verify(ctx).json(mapCaptor.capture());
+    verify(ctx).status(HttpStatus.CREATED);
 
-    // Assert
-    assertNotNull(addedTask, "Task should be added");
-    // Add more assertions to verify the properties of addedTask
+    Document addedTask = db.getCollection("task")
+        .find(eq("description", "test description")).first();
+
+    assertNotEquals("", addedTask.get("_id"));
+    assertEquals("description", addedTask.get("test description"));
+    assertEquals("position", addedTask.get("1"));
   }
 
   @Test
@@ -206,16 +217,16 @@ class TaskControllerSpec {
   }
 
   @Test
-    void testGetTask() {
-        // Arrange
-        TaskController taskController = new TaskController(null);
-        String taskId = "some-task-id"; // Replace with a valid task ID
+  void testGetTask() {
+    // Arrange
+    TaskController taskController = new TaskController(null);
+    String taskId = "some-task-id"; // Replace with a valid task ID
 
-        // Act
-        Task task = taskController.getTask(ctx);
+    // Act
+    Task task = taskController.getTask(ctx);
 
-        // Assert
-        assertNotNull(task, "Task should not be null");
-        assertEquals(taskId, task.getId(), "Task ID should match the requested ID");
-    }
+    // Assert
+    assertNotNull(task, "Task should not be null");
+    assertEquals(taskId, task.getId(), "Task ID should match the requested ID");
+  }
 }
