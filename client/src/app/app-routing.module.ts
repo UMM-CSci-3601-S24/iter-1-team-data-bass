@@ -5,8 +5,8 @@ import { AddUserComponent } from './users/add-user.component';
 import { UserListComponent } from './users/user-list.component';
 import { UserProfileComponent } from './users/user-profile.component';
 import { CompanyListComponent } from './company-list/company-list.component';
-import { HostComponent } from './host/host.component';
 import { PlayerComponent } from './player/player.component';
+import { CreateHuntComponent } from './hunt/create-hunt.component';
 
 // Note that the 'users/new' route needs to come before 'users/:id'.
 // If 'users/:id' came first, it would accidentally catch requests to
@@ -17,7 +17,7 @@ const routes: Routes = [
   {path: 'users/new', component: AddUserComponent, title: 'Add User'},
   {path: 'users/:id', component: UserProfileComponent, title: 'User Profile'},
   {path: 'companies', component: CompanyListComponent, title: 'Companies'},
-  {path: 'host', component: HostComponent, title: 'Host'},
+  {path: 'create-hunt', component: CreateHuntComponent, title: 'Hunt'},
   {path: 'player', component: PlayerComponent, title: 'Player'},
 
 ];

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HostComponent } from './host.component';
+import { CreateHuntComponent } from './create-hunt.component';
 
-describe('HostComponent', () => {
-  let component: HostComponent;
-  let fixture: ComponentFixture<HostComponent>;
+describe('CreateHuntComponent', () => {
+  let component: CreateHuntComponent;
+  let fixture: ComponentFixture<CreateHuntComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HostComponent]
+      imports: [CreateHuntComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(HostComponent);
+    fixture = TestBed.createComponent(CreateHuntComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
