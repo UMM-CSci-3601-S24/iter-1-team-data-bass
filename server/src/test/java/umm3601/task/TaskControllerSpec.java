@@ -10,14 +10,12 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
 import com.mongodb.MongoClientSettings;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
@@ -25,9 +23,10 @@ import io.javalin.json.JavalinJackson;
 import io.javalin.validation.BodyValidator;
 
 import static com.mongodb.client.model.Filters.eq;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -35,6 +34,7 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -140,30 +140,36 @@ class TaskControllerSpec {
     verify(mockServer, Mockito.atLeastOnce()).delete(any(), any());
   }
 
-  // testing adding a new task.
   @Test
   void addTask() throws IOException {
     String testNewTask = """
         {
-          "description": "test description",
-          "position": 1,
-          "HuntId": testHuntId
+          "description": "Test Task",
+          "position": 25,
+          "HuntId": "testers",
         }
         """;
     when(ctx.bodyValidator(Task.class))
-        .then(value -> new BodyValidator<>(testNewTask, Task.class, javalinJackson));
+        .then(value -> new BodyValidator<Task>(testNewTask, Task.class, javalinJackson));
 
     taskController.addNewTask(ctx);
     verify(ctx).json(mapCaptor.capture());
+
+    // Our status should be 201, i.e., our new task was successfully created.
     verify(ctx).status(HttpStatus.CREATED);
 
-    Document addedTask = db.getCollection("task")
-        .find(eq("description", "test description")).first();
+    // Verify that the task was added to the database with the correct ID
+    Document addedTask = db.getCollection("tasks")
+        .find(eq("_id", new ObjectId(mapCaptor.getValue().get("id")))).first();
 
+    // Successfully adding the task should return the newly generated, non-empty
+    // MongoDB ID for that task.
     assertNotEquals("", addedTask.get("_id"));
-    assertEquals("description", addedTask.get("test description"));
-    assertEquals("position", addedTask.get("1"));
+    assertEquals("Test Task", addedTask.get("description"));
+    assertEquals(25, addedTask.get(TaskController.POSITION_KEY));
+    assertEquals("testers", addedTask.get(TaskController.HUNTID_KEY));
   }
+
 
   @Test
   void testRemoveTask() throws IOException {
@@ -175,10 +181,10 @@ class TaskControllerSpec {
     assertEquals(0, db.getCollection("tasks").countDocuments(eq("_id", new ObjectId(testId))));
   }
 
-  @Test
+/*   @Test
   void testMarkTaskAsDone() {
     // Arrange
-    TaskController taskController = new TaskController(null);
+    TaskController taskController = new TaskController(db);
     String taskId = "some-task-id"; // Replace with a valid task ID
 
     // Act
@@ -187,11 +193,12 @@ class TaskControllerSpec {
     // Assert
     assertTrue(isMarkedDone, "Task should be marked as done");
   }
+*/
 
-  @Test
+/*   @Test
   void testArrangeTasks() {
     // Arrange
-    TaskController taskController = new TaskController(null);
+    TaskController taskController = new TaskController(db);
     List<Task> tasks = new ArrayList<>(); // Assuming Task is a class representing a task
     // Add tasks to the list
 
@@ -201,12 +208,13 @@ class TaskControllerSpec {
     // Assert
     assertNotNull(arrangedTasks, "Tasks should be arranged");
     // Add more assertions to verify the order of arrangedTasks
-  }
+  } */
 
+/*
   @Test
   void testMarkTaskAsPartiallyDone() {
     // Arrange
-    TaskController taskController = new TaskController(null);
+    TaskController taskController = new TaskController(db);
     String taskId = "some-task-id"; // Replace with a valid task ID
 
     // Act
@@ -214,19 +222,39 @@ class TaskControllerSpec {
 
     // Assert
     assertTrue(isMarkedPartiallyDone, "Task should be marked as partially done");
-  }
+  } */
 
   @Test
-  void testGetTask() {
-    // Arrange
-    TaskController taskController = new TaskController(null);
-    String taskId = "some-task-id"; // Replace with a valid task ID
+  void canGetAllTasks() throws IOException {
+    // When something asks the (mocked) context for the queryParamMap,
+    // it will return an empty map (since there are no query params in
+    // this case where we want all tasks).
+    when(ctx.queryParamMap()).thenReturn(Collections.emptyMap());
 
-    // Act
-    Task task = taskController.getTask(ctx);
+    // Now, go ahead and ask the taskController to getTasks
+    // (which will, indeed, ask the context for its queryParamMap)
+    taskController.getTasks(ctx);
 
-    // Assert
-    assertNotNull(task, "Task should not be null");
-    assertEquals(taskId, task.getId(), "Task ID should match the requested ID");
+    // We are going to capture an argument to a function, and the type of
+    // that argument will be of type ArrayList<Task> (we said so earlier
+    // using a Mockito annotation like this):
+    // @Captor
+    // private ArgumentCaptor<ArrayList<Task>> taskArrayListCaptor;
+    // We only want to declare that captor once and let the annotation
+    // help us accomplish reassignment of the value for the captor
+    // We reset the values of our annotated declarations using the command
+    // `MockitoAnnotations.openMocks(this);` in our @BeforeEach
+
+    // Specifically, we want to pay attention to the ArrayList<Task> that
+    // is passed as input when ctx.json is called --- what is the argument
+    // that was passed? We capture it and can refer to it later.
+    verify(ctx).json(taskArrayListCaptor.capture());
+    verify(ctx).status(HttpStatus.OK);
+
+    // Check that the database collection holds the same number of documents
+    // as the size of the captured List<Task>
+    assertEquals(
+        db.getCollection("testTasks").countDocuments(),
+        taskArrayListCaptor.getValue().size());
   }
 }

@@ -10,9 +10,10 @@ public class Task {
 
   @SuppressWarnings({"TaskDescription"})
   public String _id;
+
   public String description;
   public int position;
-  public String Huntid;
+  public String HuntId;
 public boolean isDone;
 
   @Override

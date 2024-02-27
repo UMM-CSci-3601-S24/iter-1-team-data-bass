@@ -6,14 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.bson.BsonDocument;
 import org.bson.UuidRepresentation;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
-import org.jetbrains.annotations.NotNull;
 import org.mongojack.JacksonMongoCollection;
 
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.result.DeleteResult;
 
 import io.javalin.Javalin;
 import io.javalin.http.BadRequestResponse;
@@ -45,35 +44,30 @@ public class TaskController implements Controller {
         UuidRepresentation.STANDARD);
   }
 
-  /**
-   * Set the JSON body of the response to be a list of all the tasks returned from the database
-   * that match any requested filters and ordering
-   *
-   * @param ctx a Javalin HTTP context
-   */
-  public void getTasks(Context ctx) {
-    System.err.println(ctx);
-    System.err.println(Task.class);
-
-    // Explicitly set the context status to OK
-    ctx.status(HttpStatus.OK);
-  }
-
-  void addNewTask(Context ctx) {
+  public void addNewTask(Context ctx) {
     Task newTask = ctx.bodyValidator(Task.class)
-      .check((Task task) -> task.description != null && task.description.length() > 0, "Description must not be null or empty")
-      .check((Task task) -> task.position >= 0, "Position must be greater than or equal to 0")
-      .check((Task task) -> task.Huntid != null && task.Huntid.length() > 0, "HuntId must not be null or empty")
+      .check(usr -> usr.description != null
+      && usr.description.length() > 0, "Task must have a non-empty task descriptions")
+      .check(usr -> usr.position >= 0, "Task's position must be greater than or equal to zero")
+      .check(usr -> usr.HuntId != null && usr.HuntId.length() > 0, "Task must have a non-empty Huntid")
       .get();
 
+    // Add the new task to the database
     taskCollection.insertOne(newTask);
 
+    // Set the JSON response to be the `_id` of the newly created task.
+    // This gives the client the opportunity to know the ID of the new task,
+    // which it can then use to perform further operations (e.g., a GET request
+    // to get and display the details of the new task).
     ctx.json(Map.of("id", newTask._id));
-
+    // 201 (`HttpStatus.CREATED`) is the HTTP code for when we successfully
+    // create a new resource (a task in this case).
+    // See, e.g., https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+    // for a description of the various response codes.
     ctx.status(HttpStatus.CREATED);
   }
 
-public boolean markTaskAsDone(@NotNull String taskId) {
+/* public boolean markTaskAsDone(@NotNull String taskId) {
   Task task = taskCollection.find(eq("_id", new ObjectId(taskId))).first();
   if (task == null) {
     throw new NotFoundResponse("The requested task was not found");
@@ -81,17 +75,17 @@ public boolean markTaskAsDone(@NotNull String taskId) {
   task.isDone = true;
   taskCollection.replaceOne(eq("_id", new ObjectId(taskId)), task);
   return true;
-}
+} */
 
   public List<Task> arrangeTasks(List<Task> tasks) {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'arrangeTasks'");
   }
 
-  public boolean markTaskAsPartiallyDone(String taskId) {
+/*   public boolean markTaskAsPartiallyDone(String taskId) {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'markTaskAsPartiallyDone'");
-  }
+  } */
 
   /**
    * Setup routes for the `task` collection endpoints.
@@ -121,6 +115,28 @@ public boolean markTaskAsDone(@NotNull String taskId) {
    * @param taskController The controller that handles the task endpoints
    */
 
+  /**
+   * Set the JSON body of the response to be the single task
+   * specified by the `id` parameter in the request
+   *
+   * @param ctx a Javalin HTTP context
+   */
+  public void getTask(Context ctx) {
+    String id = ctx.pathParam("id");
+    Task task;
+
+    try {
+      task = taskCollection.find(eq("_id", new ObjectId(id))).first();
+    } catch (IllegalArgumentException e) {
+      throw new BadRequestResponse("The requested task id wasn't a legal Mongo Object ID.");
+    }
+    if (task == null) {
+      throw new NotFoundResponse("The requested task was not found");
+    } else {
+      ctx.json(task);
+      ctx.status(HttpStatus.OK);
+    }
+  }
   public void addRoutes(Javalin server) {
     // Get the specified task
     server.get(API_TASK_BY_ID, this::getTask);
@@ -132,15 +148,59 @@ public boolean markTaskAsDone(@NotNull String taskId) {
     // Delete the specified task
     server.delete(API_TASK_BY_ID, ctx -> deleteTask(ctx));
   }
-
   public void deleteTask(Context ctx) {
     String id = ctx.pathParam("id");
-    DeleteResult deleteResult = taskCollection.deleteOne(eq("_id", new ObjectId(id)));
-    if (deleteResult.getDeletedCount() != 1) {
+    Task task = taskCollection.find(eq("_id", new ObjectId(id))).first();
+    if (task == null) {
       ctx.status(HttpStatus.NOT_FOUND);
-      throw new NotFoundResponse(
-        "Was unable to find this task");
+      throw new NotFoundResponse("Task not found");
     }
+    taskCollection.findOneAndDelete(eq("_id", new ObjectId(id)));
     ctx.status(HttpStatus.OK);
   }
+    /**
+   * Set the JSON body of the response to be a list of all the tasks returned from the database
+   * that match any requested filters and ordering
+   *
+   * @param ctx a Javalin HTTP context
+   */
+  public void getTasks(Context ctx) {
+    Bson combinedFilter = constructFilter(ctx);
+    Bson sortingOrder = constructSortingOrder(ctx);
+
+    // All three of the find, sort, and into steps happen "in parallel" inside the
+    // database system. So MongoDB is going to find the tasks with the specified
+    // properties, return those sorted in the specified manner, and put the
+    // results into an initially empty ArrayList.
+    ArrayList<Task> matchingTasks = taskCollection
+      .find(combinedFilter)
+      .sort(sortingOrder)
+      .into(new ArrayList<>());
+
+    // Set the JSON body of the response to be the list of tasks returned by the database.
+    // According to the Javalin documentation (https://javalin.io/documentation#context),
+    // this calls result(jsonString), and also sets content type to json
+    ctx.json(matchingTasks);
+
+    // Explicitly set the context status to OK
+    ctx.status(HttpStatus.OK);
+  }
+    private Bson constructSortingOrder(Context ctx) {
+      // order by the Position key
+      return eq(POSITION_KEY, 1);
+    }
+
+    private Bson constructFilter(Context ctx) {
+      List<Bson> filters = new ArrayList<Bson>();
+
+      if (ctx.queryParamMap().containsKey(POSITION_KEY)) {
+        filters.add(eq(POSITION_KEY, ctx.queryParam(POSITION_KEY)));
+      }
+
+      if (ctx.queryParamMap().containsKey(HUNTID_KEY)) {
+        filters.add(eq(HUNTID_KEY, ctx.queryParam(HUNTID_KEY)));
+      }
+
+      return filters.isEmpty() ? new BsonDocument() : new BsonDocument();
+    }
 }
