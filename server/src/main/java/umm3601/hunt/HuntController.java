@@ -1,6 +1,6 @@
 package umm3601.hunt;
 
-import static org.mockito.ArgumentMatchers.eq;
+import static com.mongodb.client.model.Filters.eq;
 
 import org.bson.UuidRepresentation;
 import org.bson.types.ObjectId;
@@ -45,6 +45,8 @@ public class HuntController implements Controller {
    * @param ctx a Javalin HTTP context
    */
   public void getHunt(Context ctx) {
+    // ...
+
     String id = ctx.pathParam("id");
     Hunt hunt;
 
@@ -66,6 +68,16 @@ public class HuntController implements Controller {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'addRoutes'");
   }
+
+  public Hunt createHunt(Hunt newHunt) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'createHunt'");
+}
+
+  public boolean removeHunt(String string) {
+  // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'removeHunt'");
+}
 
 
 }

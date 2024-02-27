@@ -1,5 +1,10 @@
 package umm3601.hunt;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,9 +15,11 @@ import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import com.mongodb.MongoClientSettings;
@@ -107,5 +114,28 @@ class HuntControllerSpec {
         huntController = new HuntController(db);
   }
 
+  @Test
+  void addsRoutes() {
+    Javalin mockServer = mock(Javalin.class);
+    huntController.addRoutes(mockServer);
+    verify(mockServer, Mockito.atLeast(3)).get(any(), any());
+    verify(mockServer, Mockito.atLeastOnce()).post(any(), any());
+    verify(mockServer, Mockito.atLeastOnce()).delete(any(), any());
+  }
+
+  @Test
+  void testCreateHunt() {
+    HuntController huntController = new HuntController(null);
+    Hunt newHunt = new Hunt();
+    Hunt createdHunt = huntController.createHunt(newHunt);
+    assertNotNull(createdHunt, "Hunt should be added");
+  }
+
+  @Test
+  void testRemoveHunt() {
+    HuntController huntController = new HuntController(null);
+    boolean removedHunt = huntController.removeHunt("65d8f8d6384ab865a9acad5f");
+    assertNotNull(removedHunt, "Hunt should be removed");
+  }
 
 }

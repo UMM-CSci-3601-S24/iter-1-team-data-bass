@@ -12,7 +12,7 @@ public class Task {
   public String _id;
   public String description;
   public int position;
-  public String Huntid;
+  public String HuntId;
 
   @Override
   public boolean equals(Object obj) {
