@@ -30,9 +30,9 @@ public class HuntController implements Controller {
   private static final String API_HUNTS = "/api/hunts";
   private static final String API_HUNTS_BY_ID = "/api/hunts/{id}";
 
-  static final String HOST_KEY = "hostId";
-  static final String TITLE_KEY = "huntTitle";
-  static final String DESCRIPTION_KEY = "huntDescription";
+  static final String HOST_KEY = "hostid";
+  static final String TITLE_KEY = "title";
+  static final String DESCRIPTION_KEY = "description";
   static final String SORT_ORDER_KEY = "sortorder";
 
   private final JacksonMongoCollection<Hunt> huntCollection;

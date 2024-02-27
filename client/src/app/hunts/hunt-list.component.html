@@ -1,1 +1,13 @@
-<p>hunt-list works!</p>
+<div class="flex-row">
+  <div class="flex-1">
+    <mat-card class="hunt-card-wrapper">
+      <div class="flex-1">
+        <div class="hunt-cards-container flex-row gap-8 flex-wrap">
+          @for (hunt of serverFilteredHunts; track hunt._id) {
+          <app-hunt-card class="hunt-card" [hunt]="hunt"></app-hunt-card>
+          }
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>

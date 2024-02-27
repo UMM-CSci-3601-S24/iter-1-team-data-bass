@@ -27,9 +27,9 @@ public class Hunt {
   // name of the field as used by MongoDB.
   @SuppressWarnings({ "MemberName" })
   public String _id;
-  public String hostId;
-  public String huntDescription;
-  public String huntTitle;
+  public String hostid;
+  public String description;
+  public String title;
 
 
   @Override

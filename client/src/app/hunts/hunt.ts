@@ -1,8 +1,9 @@
 
 export interface Hunt {
   _id: string;
-  hostId: string;
-  huntDescription: string;
-  huntTitle: string;
+  hostid: string;
+  title: string;
+  description: string;
+
 
 }
