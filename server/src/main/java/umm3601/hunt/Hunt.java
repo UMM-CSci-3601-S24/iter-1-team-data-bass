@@ -29,7 +29,7 @@ public class Hunt {
   public String _id;
   public String hostId;
   public String huntDescription;
-  public String huntName;
+  public String huntTitle;
 
 
   @Override
