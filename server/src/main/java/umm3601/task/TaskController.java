@@ -45,7 +45,7 @@ public class TaskController implements Controller {
   }
 
   /**
-   * Set the JSON body of the response to be the single user
+   * Set the JSON body of the response to be the single task
    * specified by the `id` parameter in the request
    *
    * @param ctx a Javalin HTTP context
