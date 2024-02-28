@@ -39,6 +39,41 @@ export class AddHuntComponent {
       },
     ])),
 
+    hostid: new FormControl('', Validators.compose([
+      Validators.required,
+      Validators.minLength(2),
+      // In the real world you'd want to be very careful about having
+      // an upper limit like this because people can sometimes have
+      // very long names. This demonstrates that it's possible, though,
+      // to have maximum length limits.
+      Validators.maxLength(50),
+      (fc) => {
+        if (fc.value.toLowerCase() === 'abc123' || fc.value.toLowerCase() === '123abc') {
+          return ({existingName: true});
+        } else {
+          return null;
+        }
+      },
+    ])),
+
+    description: new FormControl('', Validators.compose([
+      Validators.required,
+      Validators.minLength(2),
+      // In the real world you'd want to be very careful about having
+      // an upper limit like this because people can sometimes have
+      // very long names. This demonstrates that it's possible, though,
+      // to have maximum length limits.
+      Validators.maxLength(50),
+      (fc) => {
+        if (fc.value.toLowerCase() === 'abc123' || fc.value.toLowerCase() === '123abc') {
+          return ({existingName: true});
+        } else {
+          return null;
+        }
+      },
+    ])),
+
+
     // // Since this is for a company, we need workers to be old enough to work, and probably not older than 200.
     // age: new FormControl<number>(null, Validators.compose([
     //   Validators.required,
@@ -68,6 +103,20 @@ export class AddHuntComponent {
   // the order the messages are defined in is the order they will display in.
   readonly addHuntValidationMessages = {
     title: [
+      {type: 'required', message: 'Name is required'},
+      {type: 'minlength', message: 'Name must be at least 2 characters long'},
+      {type: 'maxlength', message: 'Name cannot be more than 50 characters long'},
+      {type: 'existingName', message: 'Name has already been taken'}
+    ],
+
+    hostid: [
+      {type: 'required', message: 'Name is required'},
+      {type: 'minlength', message: 'Name must be at least 2 characters long'},
+      {type: 'maxlength', message: 'Name cannot be more than 50 characters long'},
+      {type: 'existingName', message: 'Name has already been taken'}
+    ],
+
+    description: [
       {type: 'required', message: 'Name is required'},
       {type: 'minlength', message: 'Name must be at least 2 characters long'},
       {type: 'maxlength', message: 'Name cannot be more than 50 characters long'},
