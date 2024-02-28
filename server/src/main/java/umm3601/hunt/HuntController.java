@@ -4,6 +4,9 @@ import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.regex;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -171,13 +174,7 @@ public void getHunts(Context ctx) {
    *
    */
 
-  public void addRoutes(Javalin server) {
 
-    // get the specified Hunt
-    server.get(API_HUNTS_BY_ID, this::getHunt);
-    // List hunts, filtered using query parameters
-    server.get(API_HUNTS, this::getHunts);
-  }
 
   public void addNewHunt(Context ctx) {
     /*
@@ -195,7 +192,7 @@ public void getHunts(Context ctx) {
      * `BadRequestResponse` with an appropriate error message.
      */
     Hunt newHunt = ctx.bodyValidator(Hunt.class)
-      // .check(usr -> usr.name != null && usr.name.length() > 0, "User must have a non-empty user name")
+      .check(usr -> usr.title != null && usr.title.length() > 0, "User must have a non-empty user name")
       // .check(usr -> usr.email.matches(EMAIL_REGEX), "User must have a legal email")
       // .check(usr -> usr.age > 0, "User's age must be greater than zero")
       // .check(usr -> usr.age < REASONABLE_AGE_LIMIT, "User's age must be less than " + REASONABLE_AGE_LIMIT)
@@ -219,5 +216,30 @@ public void getHunts(Context ctx) {
     ctx.status(HttpStatus.CREATED);
   }
 
+    /**
+   * Utility function to generate the md5 hash for a given string
+   *
+   * @param str the string to generate a md5 for
+   */
+  public String md5(String str) throws NoSuchAlgorithmException {
+    MessageDigest md = MessageDigest.getInstance("MD5");
+    byte[] hashInBytes = md.digest(str.toLowerCase().getBytes(StandardCharsets.UTF_8));
+
+    StringBuilder result = new StringBuilder();
+    for (byte b : hashInBytes) {
+      result.append(String.format("%02x", b));
+    }
+    return result.toString();
+  }
+
+  public void addRoutes(Javalin server) {
+
+    // get the specified Hunt
+    server.get(API_HUNTS_BY_ID, this::getHunt);
+    // List hunts, filtered using query parameters
+    server.get(API_HUNTS, this::getHunts);
+
+    server.post(API_HUNTS, this::addNewHunt);
+  }
 
 }

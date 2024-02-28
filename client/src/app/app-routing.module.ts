@@ -19,12 +19,13 @@ const routes: Routes = [
   {path: '', component: HomeComponent, title: 'Home'},
   {path: 'users', component: UserListComponent, title: 'Users'},
   {path: 'users/new', component: AddUserComponent, title: 'Add User'},
-  {path: 'hunts/new', component: AddHuntComponent, title: 'Add Hunt'},
   {path: 'users/:id', component: UserProfileComponent, title: 'User Profile'},
+  {path: 'hunts', component: HuntListComponent, title: 'Hunts'},
+  {path: 'hunts/new', component: AddHuntComponent, title: 'Add Hunt'},
   {path: 'hunts/:id', component: HuntProfileComponent, title: 'User Profile'},
   {path: 'companies', component: CompanyListComponent, title: 'Companies'},
   {path: 'player', component: PlayerComponent, title: 'Player'},
-  {path: 'hunts', component: HuntListComponent, title: 'Hunts'},
+
 
 
 
