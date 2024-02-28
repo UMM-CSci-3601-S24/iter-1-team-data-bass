@@ -6,6 +6,7 @@ import static com.mongodb.client.model.Filters.regex;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -177,5 +178,46 @@ public void getHunts(Context ctx) {
     // List hunts, filtered using query parameters
     server.get(API_HUNTS, this::getHunts);
   }
+
+  public void addNewHunt(Context ctx) {
+    /*
+     * The follow chain of statements uses the Javalin validator system
+     * to verify that instance of `User` provided in this context is
+     * a "legal" user. It checks the following things (in order):
+     *    - The user has a value for the name (`usr.name != null`)
+     *    - The user name is not blank (`usr.name.length > 0`)
+     *    - The provided email is valid (matches EMAIL_REGEX)
+     *    - The provided age is > 0
+     *    - The provided age is < REASONABLE_AGE_LIMIT
+     *    - The provided role is valid (one of "admin", "editor", or "viewer")
+     *    - A non-blank company is provided
+     * If any of these checks fail, the Javalin system will throw a
+     * `BadRequestResponse` with an appropriate error message.
+     */
+    Hunt newHunt = ctx.bodyValidator(Hunt.class)
+      // .check(usr -> usr.name != null && usr.name.length() > 0, "User must have a non-empty user name")
+      // .check(usr -> usr.email.matches(EMAIL_REGEX), "User must have a legal email")
+      // .check(usr -> usr.age > 0, "User's age must be greater than zero")
+      // .check(usr -> usr.age < REASONABLE_AGE_LIMIT, "User's age must be less than " + REASONABLE_AGE_LIMIT)
+      // .check(usr -> usr.role.matches(ROLE_REGEX), "User must have a legal user role")
+      // .check(usr -> usr.company != null && usr.company.length() > 0, "User must have a non-empty company name")
+      .get();
+
+
+    // Add the new user to the database
+    huntCollection.insertOne(newHunt);
+
+    // Set the JSON response to be the `_id` of the newly created user.
+    // This gives the client the opportunity to know the ID of the new user,
+    // which it can then use to perform further operations (e.g., a GET request
+    // to get and display the details of the new user).
+    ctx.json(Map.of("id", newHunt._id));
+    // 201 (`HttpStatus.CREATED`) is the HTTP code for when we successfully
+    // create a new resource (a user in this case).
+    // See, e.g., https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+    // for a description of the various response codes.
+    ctx.status(HttpStatus.CREATED);
+  }
+
 
 }
