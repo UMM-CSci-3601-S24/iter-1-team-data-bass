@@ -11,7 +11,7 @@ describe('HuntListComponent', () => {
       imports: [HuntListComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(HuntListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
