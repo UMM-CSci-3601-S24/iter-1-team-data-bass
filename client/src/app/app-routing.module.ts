@@ -9,6 +9,7 @@ import { PlayerComponent } from './player/player.component';
 import { HuntListComponent } from './hunts/hunt-list.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AddHuntComponent } from './add-hunt/add-hunt.component';
+import { HuntProfileComponent } from './hunts/hunt-profile.component';
 
 
 // Note that the 'users/new' route needs to come before 'users/:id'.
@@ -20,10 +21,11 @@ const routes: Routes = [
   {path: 'users/new', component: AddUserComponent, title: 'Add User'},
   {path: 'hunts/new', component: AddHuntComponent, title: 'Add Hunt'},
   {path: 'users/:id', component: UserProfileComponent, title: 'User Profile'},
+  {path: 'hunts/:id', component: HuntProfileComponent, title: 'User Profile'},
   {path: 'companies', component: CompanyListComponent, title: 'Companies'},
   {path: 'player', component: PlayerComponent, title: 'Player'},
   {path: 'hunts', component: HuntListComponent, title: 'Hunts'},
-  {path: 'add-hunt', component: AddHuntComponent, title: 'Hunts'},
+
 
 
 ];

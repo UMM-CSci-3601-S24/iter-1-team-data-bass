@@ -15,7 +15,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterLink } from '@angular/router';
-import { UserCardComponent } from '../users/user-card.component';
+
 import { HuntCardComponent } from "./hunt-card.component";
 import { HttpClientModule } from '@angular/common/http';
 
@@ -24,7 +24,7 @@ import { HttpClientModule } from '@angular/common/http';
     standalone: true,
     templateUrl: './hunt-list.component.html',
     styleUrl: './hunt-list.component.scss',
-    imports: [HttpClientModule, HuntCardComponent, MatCardModule, MatFormFieldModule, MatInputModule, FormsModule, MatSelectModule, MatOptionModule, MatRadioModule, UserCardComponent, MatListModule, RouterLink, MatButtonModule, MatTooltipModule, MatIconModule, HuntCardComponent]
+    imports: [HttpClientModule, HuntCardComponent, MatCardModule, MatFormFieldModule, MatInputModule, FormsModule, MatSelectModule, MatOptionModule, MatRadioModule, HuntCardComponent, MatListModule, RouterLink, MatButtonModule, MatTooltipModule, MatIconModule, HuntCardComponent]
 })
 export class HuntListComponent implements OnInit, OnDestroy {
   // These are public so that tests can reference them (.spec.ts)

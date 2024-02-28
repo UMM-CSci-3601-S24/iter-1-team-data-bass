@@ -43,6 +43,11 @@ export class HuntService {
     });
   }
 
+  getHuntById(id: string): Observable<Hunt> {
+    // The input to get could also be written as (this.userUrl + '/' + id)
+    return this.httpClient.get<Hunt>(`${this.huntUrl}/${id}`);
+  }
+
   addHunt(newHunt: Partial<Hunt>): Observable<string> {
     // Send post request to add a new user with the user data as the body.
     return this.httpClient.post<{id: string}>(this.huntUrl, newHunt).pipe(map(res => res.id));
