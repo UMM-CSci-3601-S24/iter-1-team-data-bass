@@ -1,8 +1,32 @@
 .hunt-card {
-background-color: rgb(235, 241, 218);
+background-color: rgb(0, 0, 0);
+text-align: center;
+margin: 5%;
+text-decoration: none;
 }
 
 .hunt-title {
   background-color: rgb(195, 216, 237);
   text-align: center;
+}
+
+
+
+
+mat-card-subtitle{
+  margin: 5%;
+}
+
+// This prevents the text on each card from being underlined
+a:link {
+  text-decoration: none;
+}
+a:visited {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: none;
+}
+a:active {
+  text-decoration: none;
 }

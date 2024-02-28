@@ -8,6 +8,7 @@ import { CompanyListComponent } from './company-list/company-list.component';
 import { HostComponent } from './host/host.component';
 import { PlayerComponent } from './player/player.component';
 import { HuntListComponent } from './hunts/hunt-list.component';
+import { HttpClientModule } from '@angular/common/http';
 
 
 // Note that the 'users/new' route needs to come before 'users/:id'.
@@ -26,7 +27,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes), HttpClientModule],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
