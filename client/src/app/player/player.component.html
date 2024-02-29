@@ -1,1 +1,9 @@
-<p>player works!</p>
+<div style="padding-top: 200px">
+  <button (click)="addTextarea()">Add Textarea</button>
+  <form>
+      <div *ngFor="let textarea of textAreasList; let textarea_index= index">
+          <textarea name="{{textarea}}"></textarea>
+          <button (click)="removeTextArea(textarea_index)">Remove</button>
+      </div>
+  </form>
+</div>

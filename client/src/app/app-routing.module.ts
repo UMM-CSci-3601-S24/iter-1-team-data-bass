@@ -8,7 +8,7 @@ import { CompanyListComponent } from './company-list/company-list.component';
 import { PlayerComponent } from './player/player.component';
 import { HuntListComponent } from './hunts/hunt-list.component';
 import { HttpClientModule } from '@angular/common/http';
-import { AddHuntComponent } from './add-hunt/add-hunt.component';
+import { AddHuntComponent } from './hunts/add-hunt.component';
 import { HuntProfileComponent } from './hunts/hunt-profile.component';
 
 
