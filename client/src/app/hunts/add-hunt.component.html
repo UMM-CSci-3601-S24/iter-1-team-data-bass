@@ -48,12 +48,22 @@
               <mat-label>Task</mat-label>
               <input matInput formControlName="task"
                 required>
-              @if (formControlHasError('task')) {
+              <!-- @if (formControlHasError('task')) {
                 <mat-error data-test="task">
                   {{getErrorMessage('task')}}
                 </mat-error>
-              }
+              } -->
             </mat-form-field>
+
+            <div style="padding-top: 10px">
+              <button (click)="addTextarea()">Add Textarea</button>
+              <button (click)="removeTextArea(textAreasList)">Remove Textarea</button>
+                  <mat-form-field *ngFor="let textarea of textAreasList; let textarea_index= index">
+                      <mat-label>Task</mat-label>
+                      <input matInput formControlName="description"
+                        required>
+                  </mat-form-field>
+            </div>
 
 
 

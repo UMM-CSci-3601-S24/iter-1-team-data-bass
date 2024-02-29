@@ -21,6 +21,17 @@ import { NgFor } from '@angular/common';
 })
 export class AddHuntComponent {
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    textAreasList:any = [];
+
+    addTextarea(){
+        this.textAreasList.push('text_area'+ (this.textAreasList.length + 1));
+    }
+
+
+    removeTextArea(index){
+        this.textAreasList.splice(index, 1);
+    }
 
   addHuntForm = new FormGroup({
     // We allow alphanumeric input and limit the length for name.
@@ -135,6 +146,8 @@ export class AddHuntComponent {
     private snackBar: MatSnackBar,
     private router: Router) {
   }
+
+
 
   formControlHasError(controlTitle: string): boolean {
     return this.addHuntForm.get(controlTitle).invalid &&
