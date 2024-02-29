@@ -9,16 +9,28 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { HuntService } from 'src/app/hunts/hunt.service';
+import { NgFor } from '@angular/common';
 
 
 @Component({
   selector: 'app-add-hunt',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, MatCardModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatOptionModule, MatButtonModule],
+  imports: [NgFor, FormsModule, ReactiveFormsModule, MatCardModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatOptionModule, MatButtonModule],
   templateUrl: './add-hunt.component.html',
   styleUrl: './add-hunt.component.scss'
 })
 export class AddHuntComponent {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    textAreasList:any = [];
+
+    addTextarea(){
+        this.textAreasList.push('text_area'+ (this.textAreasList.length + 1));
+    }
+
+
+    removeTextArea(index){
+        this.textAreasList.splice(index, 1);
+    }
 
   addHuntForm = new FormGroup({
     // We allow alphanumeric input and limit the length for name.
