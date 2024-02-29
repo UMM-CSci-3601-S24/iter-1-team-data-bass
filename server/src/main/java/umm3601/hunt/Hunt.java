@@ -30,6 +30,7 @@ public class Hunt {
   public String hostid;
   public String description;
   public String title;
+  public String task;
 
 
   @Override

@@ -36,6 +36,7 @@ public class HuntController implements Controller {
 
   static final String HOST_KEY = "hostid";
   static final String TITLE_KEY = "title";
+  static final String TASK_KEY = "task";
   static final String DESCRIPTION_KEY = "description";
   static final String SORT_ORDER_KEY = "sortorder";
 
@@ -134,6 +135,11 @@ public void getHunts(Context ctx) {
   Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(DESCRIPTION_KEY)), Pattern.CASE_INSENSITIVE);
   filters.add(regex(DESCRIPTION_KEY, pattern));
     }
+
+  if (ctx.queryParamMap().containsKey(TASK_KEY)) {
+    Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(TASK_KEY)), Pattern.CASE_INSENSITIVE);
+    filters.add(regex(TASK_KEY, pattern));
+      }
 
   // Combine list of filters into a single filtering document.
   Bson combinedFilter = filters.isEmpty() ? new Document() : and(filters);

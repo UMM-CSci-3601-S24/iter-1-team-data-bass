@@ -14,6 +14,8 @@ export class HuntService {
 
   private readonly hostKey = 'hostid';
   private readonly titleKey = 'title';
+  private readonly descriptionKey = 'description';
+  private readonly taskKey = 'task';
 
   constructor(private httpClient: HttpClient) {
   }
@@ -26,7 +28,7 @@ export class HuntService {
   *   from the server after a possibly substantial delay (because we're
   *   contacting a remote server over the Internet).
   */
-  getHunts(filters?: { hostid?: string; title?: string}): Observable<Hunt[]> {
+  getHunts(filters?: { hostid?: string; title?: string; task: string; description: string}): Observable<Hunt[]> {
     let httpParams: HttpParams = new HttpParams();
     if (filters) {
       if (filters.hostid) {
@@ -34,6 +36,14 @@ export class HuntService {
       }
       if (filters.title) {
         httpParams = httpParams.set(this.titleKey, filters.title);
+      }
+
+      if (filters.description) {
+        httpParams = httpParams.set(this.descriptionKey, filters.description);
+      }
+
+      if (filters.task) {
+        httpParams = httpParams.set(this.taskKey, filters.task);
       }
 
     }

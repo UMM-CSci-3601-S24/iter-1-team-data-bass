@@ -53,7 +53,8 @@ export class HuntListComponent implements OnInit, OnDestroy {
   getHuntsFromServer(): void {
     this.huntService.getHunts({
       hostid: this.huntHost,
-
+      task: '',
+      description: ''
     }).pipe(
       takeUntil(this.ngUnsubscribe)
     ).subscribe({
