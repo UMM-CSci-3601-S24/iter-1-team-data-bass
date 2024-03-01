@@ -17,4 +17,5 @@ export class HuntCardComponent {
 
   @Input() hunt: Hunt;
   @Input() simple?: boolean = false;
+  
 }

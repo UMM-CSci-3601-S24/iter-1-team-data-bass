@@ -15,6 +15,7 @@ import { HuntService } from '../app/hunts/hunt.service';
 export class MockHuntService extends HuntService {
   static testHunts: Hunt[] = [
     {
+      task: "Af",
       hostid: "Joe",
       title: "Testing hunt",
       description: "This is the description of a hunt",
