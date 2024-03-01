@@ -2,22 +2,16 @@ package umm3601.hunt;
 
 import static com.mongodb.client.model.Filters.eq;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,14 +22,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatcher;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClient;
@@ -49,9 +40,6 @@ import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
 import io.javalin.json.JavalinJackson;
-import io.javalin.validation.BodyValidator;
-import io.javalin.validation.ValidationException;
-import io.javalin.validation.Validator;
 
 /**
  * Tests the logic of the HuntController
@@ -70,7 +58,7 @@ class HuntControllerSpec {
 
   // An instance of the controller we're testing that is prepared in
   // `setupEach()`, and then exercised in the various tests below.
-  private HuntController HuntController;
+  private HuntController huntController;
 
   // A Mongo object ID that is initialized in `setupEach()` and used
   // in a few of the tests. It isn't used all that often, though,
@@ -167,21 +155,21 @@ class HuntControllerSpec {
         .append("title", "Sam")
         .append("hostid", "Joe")
         .append("description", "OHMNET")
-        .append("task", "sam@frogs.com")
+        .append("task", "sam@frogs.com");
         // .append("role", "viewer")
         // .append("avatar", "https://gravatar.com/avatar/08b7610b558a4cbbd20ae99072801f4d?d=identicon"
-        ;
+
 
     huntDocuments.insertMany(testHunts);
     huntDocuments.insertOne(sam);
 
-    HuntController = new HuntController(db);
+    huntController = new HuntController(db);
   }
 
   @Test
   void addsRoutes() {
     Javalin mockServer = mock(Javalin.class);
-    HuntController.addRoutes(mockServer);
+    huntController.addRoutes(mockServer);
     verify(mockServer, Mockito.atLeast(2)).get(any(), any());
     verify(mockServer, Mockito.atLeastOnce()).post(any(), any());
     verify(mockServer, Mockito.atLeastOnce()).delete(any(), any());
@@ -196,7 +184,7 @@ class HuntControllerSpec {
 
     // Now, go ahead and ask the HuntController to getUsers
     // (which will, indeed, ask the context for its queryParamMap)
-    HuntController.getHunts(ctx);
+    huntController.getHunts(ctx);
 
     // We are going to capture an argument to a function, and the type of
     // that argument will be of type ArrayList<Hunt> (we said so earlier
@@ -417,7 +405,7 @@ class HuntControllerSpec {
     String id = samsId.toHexString();
     when(ctx.pathParam("id")).thenReturn(id);
 
-    HuntController.getHunt(ctx);
+    huntController.getHunt(ctx);
 
     verify(ctx).json(huntCaptor.capture());
     verify(ctx).status(HttpStatus.OK);
@@ -430,7 +418,7 @@ class HuntControllerSpec {
     when(ctx.pathParam("id")).thenReturn("bad");
 
     Throwable exception = assertThrows(BadRequestResponse.class, () -> {
-      HuntController.getHunt(ctx);
+      huntController.getHunt(ctx);
     });
 
     assertEquals("The requested hunt id wasn't a legal Mongo Object ID.", exception.getMessage());
@@ -442,7 +430,7 @@ class HuntControllerSpec {
     when(ctx.pathParam("id")).thenReturn(id);
 
     Throwable exception = assertThrows(NotFoundResponse.class, () -> {
-      HuntController.getHunt(ctx);
+      huntController.getHunt(ctx);
     });
 
     assertEquals("The requested hunt was not found", exception.getMessage());
@@ -772,7 +760,7 @@ class HuntControllerSpec {
     // Hunt exists before deletion
     assertEquals(1, db.getCollection("hunts").countDocuments(eq("_id", new ObjectId(testID))));
 
-    HuntController.deleteHunt(ctx);
+    huntController.deleteHunt(ctx);
 
     verify(ctx).status(HttpStatus.OK);
 
@@ -785,12 +773,12 @@ class HuntControllerSpec {
     String testID = samsId.toHexString();
     when(ctx.pathParam("id")).thenReturn(testID);
 
-    HuntController.deleteHunt(ctx);
+    huntController.deleteHunt(ctx);
     // Hunt is no longer in the database
     assertEquals(0, db.getCollection("hunts").countDocuments(eq("_id", new ObjectId(testID))));
 
     assertThrows(NotFoundResponse.class, () -> {
-      HuntController.deleteHunt(ctx);
+      huntController.deleteHunt(ctx);
     });
 
     verify(ctx).status(HttpStatus.NOT_FOUND);
