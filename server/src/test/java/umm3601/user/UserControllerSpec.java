@@ -180,7 +180,7 @@ class UserControllerSpec {
   void addsRoutes() {
     Javalin mockServer = mock(Javalin.class);
     userController.addRoutes(mockServer);
-    verify(mockServer, Mockito.atLeast(3)).get(any(), any());
+    verify(mockServer, Mockito.atLeast(8)).get(any(), any());
     verify(mockServer, Mockito.atLeastOnce()).post(any(), any());
     verify(mockServer, Mockito.atLeastOnce()).delete(any(), any());
   }

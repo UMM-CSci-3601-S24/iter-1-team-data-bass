@@ -21,6 +21,7 @@ import org.mongojack.JacksonMongoCollection;
 
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Sorts;
+import com.mongodb.client.result.DeleteResult;
 
 import io.javalin.Javalin;
 import io.javalin.http.BadRequestResponse;
@@ -32,7 +33,7 @@ import umm3601.Controller;
 public class HuntController implements Controller {
 
   private static final String API_HUNTS = "/api/hunts";
-  private static final String API_HUNTS_BY_ID = "/api/hunts/{id}";
+  private static final String API_HUNT_BY_ID = "/api/hunts/{id}";
 
   static final String HOST_KEY = "hostid";
   static final String TITLE_KEY = "title";
@@ -222,6 +223,26 @@ public void getHunts(Context ctx) {
     ctx.status(HttpStatus.CREATED);
   }
 
+
+  /**
+   * Delete the hunt specified by the `id` parameter in the request.
+   *
+   * @param ctx a Javalin HTTP context
+   */
+  public void deleteHunt(Context ctx) {
+    String id = ctx.pathParam("id");
+    DeleteResult deleteResult = huntCollection.deleteOne(eq("_id", new ObjectId(id)));
+    // We should have deleted 1 or 0 hunts, depending on whether `id` is a valid hunt ID.
+    if (deleteResult.getDeletedCount() != 1) {
+      ctx.status(HttpStatus.NOT_FOUND);
+      throw new NotFoundResponse(
+        "Was unable to delete ID "
+          + id
+          + "; perhaps illegal ID or an ID for an item not in the system?");
+    }
+    ctx.status(HttpStatus.OK);
+  }
+
     /**
    * Utility function to generate the md5 hash for a given string
    *
@@ -241,11 +262,14 @@ public void getHunts(Context ctx) {
   public void addRoutes(Javalin server) {
 
     // get the specified Hunt
-    server.get(API_HUNTS_BY_ID, this::getHunt);
+    server.get(API_HUNT_BY_ID, this::getHunt);
     // List hunts, filtered using query parameters
     server.get(API_HUNTS, this::getHunts);
 
     server.post(API_HUNTS, this::addNewHunt);
+
+    //Delete the specified user
+    server.delete(API_HUNT_BY_ID, this::deleteHunt);
   }
 
 }
