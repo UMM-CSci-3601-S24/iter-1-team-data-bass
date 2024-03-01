@@ -9,7 +9,7 @@ public class Hunt {
   @ObjectId @Id
 
   @SuppressWarnings({"HuntName"})
-  public String _id;
+  public org.bson.types.ObjectId _id;
   public String name;
   public String description;
   public String ownerId;

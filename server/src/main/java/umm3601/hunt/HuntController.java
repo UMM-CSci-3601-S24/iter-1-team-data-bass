@@ -1,7 +1,5 @@
 package umm3601.hunt;
 
-import static org.mockito.ArgumentMatchers.eq;
-
 import org.bson.UuidRepresentation;
 import org.bson.types.ObjectId;
 import org.mongojack.JacksonMongoCollection;
@@ -14,6 +12,7 @@ import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
 import umm3601.Controller;
+import static com.mongodb.client.model.Filters.eq;
 
 public class HuntController implements Controller {
 
@@ -61,11 +60,30 @@ public class HuntController implements Controller {
     }
   }
 
-  @Override
   public void addRoutes(Javalin server) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'addRoutes'");
+      // Get a specified hunt
+    server.get(API_HUNTS, this::getHunt);
+
+      // Add a new hunt
+    server.put(API_HUNTS, this::createHunt);
+
+      // Delete a specified hunt
+    server.delete(API_HUNT_BY_ID, this::removeHunt);
   }
 
+  public void createHunt(Context ctx) {
+    String id = ctx.pathParam("id");
+    Hunt hunt = ctx.bodyAsClass(Hunt.class);
+    hunt._id = new ObjectId(id);
+    huntCollection.insertOne(hunt);
+    ctx.status(201);
+    ctx.json(hunt);
+  }
+
+  public void removeHunt(Context ctx) {
+    String id = ctx.pathParam("id");
+    huntCollection.deleteOne(eq("_id", new ObjectId(id)));
+    ctx.status(200);
+  }
 
 }
