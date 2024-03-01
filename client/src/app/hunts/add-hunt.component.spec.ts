@@ -239,7 +239,7 @@ describe('AddHuntComponent', () => {
       // The type statement is needed to ensure that `controlTitle` isn't just any
       // random string, but rather one of the keys of the `addUserValidationMessages`
       // map in the component.
-      let controlTitle: keyof typeof addHuntComponent.addHuntValidationMessages = 'title';
+      const controlTitle: keyof typeof addHuntComponent.addHuntValidationMessages = 'title';
       addHuntComponent.addHuntForm.get(controlTitle).setErrors({'required': true});
       expect(addHuntComponent.getErrorMessage(controlTitle)).toEqual('Title is required');
 
