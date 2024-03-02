@@ -60,7 +60,7 @@
               <button (click)="removeTextArea(textAreasList)">Remove Task</button>
                   <mat-form-field *ngFor="let textarea of textAreasList; let textarea_index= index">
                       <mat-label>Task</mat-label>
-                      <input matInput formControlName="description"
+                      <input matInput formControlName="task"
                         required>
                   </mat-form-field>
             </div>
