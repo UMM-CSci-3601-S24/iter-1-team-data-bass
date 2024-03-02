@@ -40,6 +40,8 @@ import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
 import io.javalin.json.JavalinJackson;
+import io.javalin.validation.BodyValidator;
+import io.javalin.validation.ValidationException;
 
 /**
  * Tests the logic of the HuntController
@@ -659,42 +661,41 @@ class HuntControllerSpec {
   //   });
   // }
 
-  // @Test
-  // void addNullNameUser() throws IOException {
-  //   String testNewUser = """
-  //       {
-  //         "age": 25,
-  //         "company": "testers",
-  //         "email": "test@example.com",
-  //         "role": "viewer"
-  //       }
-  //       """;
-  //   when(ctx.bodyValidator(Hunt.class))
-  //       .then(value -> new BodyValidator<Hunt>(testNewUser, Hunt.class, javalinJackson));
+  @Test
+  void addNullTitleHunt() throws IOException {
+    String testNewHunt = """
+        {
+          "hostid": 25,
+          "description": "testers",
+          "task": "test@example.com",
+        }
+        """;
+    when(ctx.bodyValidator(Hunt.class))
+        .then(value -> new BodyValidator<Hunt>(testNewHunt, Hunt.class, javalinJackson));
 
-  //   assertThrows(ValidationException.class, () -> {
-  //     HuntController.addNewUser(ctx);
-  //   });
-  // }
+    assertThrows(ValidationException.class, () -> {
+      huntController.addNewHunt(ctx);
+    });
+  }
 
-  // @Test
-  // void addInvalidNameUser() throws IOException {
-  //   String testNewUser = """
-  //       {
-  //         "name": "",
-  //         "age": 25,
-  //         "company": "testers",
-  //         "email": "test@example.com",
-  //         "role": "viewer"
-  //       }
-  //       """;
-  //   when(ctx.bodyValidator(Hunt.class))
-  //       .then(value -> new BodyValidator<Hunt>(testNewUser, Hunt.class, javalinJackson));
+  @Test
+  void addInvalidTitleHunt() throws IOException {
+    String testNewHunt = """
+        {
+          "title": "",
+          "hostid": "25",
+          "description": "testers",
+          "task": "test@example.com",
 
-  //   assertThrows(ValidationException.class, () -> {
-  //     HuntController.addNewUser(ctx);
-  //   });
-  // }
+        }
+        """;
+    when(ctx.bodyValidator(Hunt.class))
+        .then(value -> new BodyValidator<Hunt>(testNewHunt, Hunt.class, javalinJackson));
+
+    assertThrows(ValidationException.class, () -> {
+      huntController.addNewHunt(ctx);
+    });
+  }
 
   // @Test
   // void addInvalidRoleUser() throws IOException {
@@ -716,12 +717,11 @@ class HuntControllerSpec {
   // }
 
   // @Test
-  // void addNullTaskHunt() throws IOException {
+  // void addNullDescriptionHunt() throws IOException {
   //   String testNewHunt = """
   //       {
   //         "title": "Test Hunt",
   //         "hostid": 25,
-  //         "description": "test@example.com",
   //         "task": "viewer"
   //       }
   //       """;
@@ -729,28 +729,27 @@ class HuntControllerSpec {
   //       .then(value -> new BodyValidator<Hunt>(testNewHunt, Hunt.class, javalinJackson));
 
   //   assertThrows(ValidationException.class, () -> {
-  //     HuntController.addNewHunt(ctx);
+  //     huntController.addNewHunt(ctx);
   //   });
   // }
 
-  // @Test
-  // void addInvalidTaskHunt() throws IOException {
-  //   String testNewUser = """
-  //       {
-  //         "name": "",
-  //         "age": 25,
-  //         "company": "",
-  //         "email": "test@example.com",
-  //         "role": "viewer"
-  //       }
-  //       """;
-  //   when(ctx.bodyValidator(Hunt.class))
-  //       .then(value -> new BodyValidator<Hunt>(testNewUser, Hunt.class, javalinJackson));
+  @Test
+  void addInvalidTaskHunt() throws IOException {
+    String testNewHunt = """
+        {
+          "title": "joe",
+          "hostid": "joe",
+          "task": "",
+          "description": "test@example.com",
+        }
+        """;
+    when(ctx.bodyValidator(Hunt.class))
+        .then(value -> new BodyValidator<Hunt>(testNewHunt, Hunt.class, javalinJackson));
 
-  //   assertThrows(ValidationException.class, () -> {
-  //     HuntController.addNewUser(ctx);
-  //   });
-  // }
+    assertThrows(ValidationException.class, () -> {
+      huntController.addNewHunt(ctx);
+    });
+  }
 
   @Test
   void deleteFoundHunt() throws IOException {
