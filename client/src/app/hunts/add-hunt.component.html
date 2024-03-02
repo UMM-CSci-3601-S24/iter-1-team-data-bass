@@ -45,26 +45,20 @@
             </mat-form-field>
 
             <mat-form-field>
-              <mat-label>Task</mat-label>
-              <input matInput formControlName="task"
-                required>
-              <!-- @if (formControlHasError('task')) {
-                <mat-error data-test="task">
-                  {{getErrorMessage('task')}}
-                </mat-error>
-              } -->
+              <!-- <mat-label>Task</mat-label> -->
+
+                <label for="taskList">Task List (Write in numbered list of tasks):</label>
+                <textarea matInput formControlName="task"></textarea>
+
             </mat-form-field>
 
-            <div style="padding-top: 10px">
-              <button (click)="addTextarea()">Add Task</button>
-              <button (click)="removeTextArea(textAreasList)">Remove Task</button>
-                  <mat-form-field *ngFor="let textarea of textAreasList; let textarea_index= index">
-                      <mat-label>Task</mat-label>
-                      <input matInput formControlName="task"
-                        required>
-                  </mat-form-field>
-            </div>
+            <!-- <mat-form-field>
+              <label for="taskList">Task List (Write in a numbered list of tasks):</label>
+              <textarea matInput formControlName="task"></textarea>
+            </mat-form-field> -->
 
+            <!-- <label for="taskList">Task List:</label>
+            <textarea matInput formControlName="task"></textare -->
 
 
 
@@ -91,3 +85,4 @@
     </form>
   </div>
 </div>
+

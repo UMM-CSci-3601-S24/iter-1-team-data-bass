@@ -1,9 +1,28 @@
-<div style="padding-top: 200px">
-  <button (click)="addTextarea()">Add Textarea</button>
-  <form>
-      <div *ngFor="let textarea of textAreasList; let textarea_index= index">
-          <textarea name="{{textarea}}"></textarea>
-          <button (click)="removeTextArea(textarea_index)">Remove</button>
-      </div>
-  </form>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>List within Textarea</title>
+</head>
+<body>
+
+  <label for="taskList">Task List:</label>
+  <textarea id="taskList" required></textarea>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const textarea = document.getElementById('taskList');
+
+      textarea.addEventListener('input', function() {
+        // Split the content of the textarea into an array of items based on new lines
+        const taskListArray = textarea.value.split('\n');
+
+        // You can now work with the taskListArray as needed
+        console.log(taskListArray);
+      });
+    });
+  </script>
+
+</body>
+</html>
