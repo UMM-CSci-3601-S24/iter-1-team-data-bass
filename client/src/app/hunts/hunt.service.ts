@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 import { Hunt } from './hunt';
 
 
+
 @Injectable({
   providedIn: `root`
 })

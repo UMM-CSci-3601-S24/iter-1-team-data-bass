@@ -2,6 +2,7 @@ package umm3601.hunt;
 
 import static com.mongodb.client.model.Filters.eq;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -544,40 +545,40 @@ class HuntControllerSpec {
   //   assertEquals(2, ohmnet.count);
   // }
 
-  // @Test
-  // void addHunt() throws IOException {
-  //   String testNewHunt = """
-  //       {
-  //         "title": "Test Hunt",
-  //         "hostid": "25",
-  //         "description": "testers",
-  //         "task": "test@example.com",
+  @Test
+  void addHunt() throws IOException {
+    String testNewHunt = """
+        {
+          "title": "Test Hunt",
+          "hostid": "25",
+          "description": "testers",
+          "task": "test@example.com",
 
-  //       }
-  //       """;
-  //   when(ctx.bodyValidator(Hunt.class))
-  //       .then(value -> new BodyValidator<Hunt>(testNewHunt, Hunt.class, javalinJackson));
+        }
+        """;
+    when(ctx.bodyValidator(Hunt.class))
+        .then(value -> new BodyValidator<Hunt>(testNewHunt, Hunt.class, javalinJackson));
 
-  //   HuntController.addNewHunt(ctx);
-  //   verify(ctx).json(mapCaptor.capture());
+    huntController.addNewHunt(ctx);
+    verify(ctx).json(mapCaptor.capture());
 
-  //   // Our status should be 201, i.e., our new Hunt was successfully created.
-  //   verify(ctx).status(HttpStatus.CREATED);
+    // Our status should be 201, i.e., our new Hunt was successfully created.
+    verify(ctx).status(HttpStatus.CREATED);
 
-  //   // Verify that the Hunt was added to the database with the correct ID
-  //   Document addedHunt = db.getCollection("hunts")
-  //       .find(eq("_id", new ObjectId(mapCaptor.getValue().get("id")))).first();
+    // Verify that the Hunt was added to the database with the correct ID
+    Document addedHunt = db.getCollection("hunts")
+        .find(eq("_id", new ObjectId(mapCaptor.getValue().get("id")))).first();
 
-  //   // Successfully adding the Hunt should return the newly generated, non-empty
-  //   // MongoDB ID for that Hunt.
-  //   assertNotEquals("", addedHunt.get("_id"));
-  //   assertEquals("Test Hunt", addedHunt.get("title"));
-  //   assertEquals("25", addedHunt.get(HuntController.HOST_KEY));
-  //   assertEquals("testers", addedHunt.get(HuntController.DESCRIPTION_KEY));
-  //   // assertEquals("test@example.com", addedHunt.get("email"));
-  //   assertEquals("viewer", addedHunt.get(HuntController.TASK_KEY));
-  //   // assertNotNull(addedHunt.get("avatar"));
-  // }
+    // Successfully adding the Hunt should return the newly generated, non-empty
+    // MongoDB ID for that Hunt.
+    assertNotEquals("", addedHunt.get("_id"));
+    assertEquals("Test Hunt", addedHunt.get("title"));
+    assertEquals("25", addedHunt.get(HuntController.HOST_KEY));
+    assertEquals("testers", addedHunt.get(HuntController.DESCRIPTION_KEY));
+    // assertEquals("test@example.com", addedHunt.get("email"));
+    assertEquals("viewer", addedHunt.get(HuntController.TASK_KEY));
+    // assertNotNull(addedHunt.get("avatar"));
+  }
 
   // @Test
   // void addInvalidEmailUser() throws IOException {
@@ -697,41 +698,40 @@ class HuntControllerSpec {
     });
   }
 
-  // @Test
-  // void addInvalidRoleUser() throws IOException {
-  //   String testNewUser = """
-  //       {
-  //         "name": "Test Hunt",
-  //         "age": 25,
-  //         "company": "testers",
-  //         "email": "test@example.com",
-  //         "role": "invalidrole"
-  //       }
-  //       """;
-  //   when(ctx.bodyValidator(Hunt.class))
-  //       .then(value -> new BodyValidator<Hunt>(testNewUser, Hunt.class, javalinJackson));
+  @Test
+  void addNullTaskHunt() throws IOException {
+    String testNewHunt = """
+        {
+          "title": "Test Hunt",
+          "hostid": 25,
+          "description": "viewer"
+        }
+        """;
+    when(ctx.bodyValidator(Hunt.class))
+        .then(value -> new BodyValidator<Hunt>(testNewHunt, Hunt.class, javalinJackson));
 
-  //   assertThrows(ValidationException.class, () -> {
-  //     HuntController.addNewUser(ctx);
-  //   });
-  // }
+    assertThrows(ValidationException.class, () -> {
+      huntController.addNewHunt(ctx);
+    });
+  }
 
-  // @Test
-  // void addNullDescriptionHunt() throws IOException {
-  //   String testNewHunt = """
-  //       {
-  //         "title": "Test Hunt",
-  //         "hostid": 25,
-  //         "task": "viewer"
-  //       }
-  //       """;
-  //   when(ctx.bodyValidator(Hunt.class))
-  //       .then(value -> new BodyValidator<Hunt>(testNewHunt, Hunt.class, javalinJackson));
 
-  //   assertThrows(ValidationException.class, () -> {
-  //     huntController.addNewHunt(ctx);
-  //   });
-  // }
+  @Test
+  void addNullDescriptionHunt() throws IOException {
+    String testNewHunt = """
+        {
+          "title": "Test Hunt",
+          "hostid": 25,
+          "task": "viewer"
+        }
+        """;
+    when(ctx.bodyValidator(Hunt.class))
+        .then(value -> new BodyValidator<Hunt>(testNewHunt, Hunt.class, javalinJackson));
+
+    assertThrows(ValidationException.class, () -> {
+      huntController.addNewHunt(ctx);
+    });
+  }
 
   @Test
   void addInvalidTaskHunt() throws IOException {

@@ -199,7 +199,11 @@ public void getHunts(Context ctx) {
      * `BadRequestResponse` with an appropriate error message.
      */
     Hunt newHunt = ctx.bodyValidator(Hunt.class)
-      .check(usr -> usr.title != null && usr.title.length() > 0, "User must have a non-empty user name")
+      .check(usr -> usr.title != null && usr.title.length() > 0, "Hunt must have a non-empty hunt title")
+      .check(usr -> usr.hostid != null && usr.hostid.length() > 0, "Hunt must have a non-empty hunt title")
+      .check(usr -> usr.description != null && usr.description.length() > 0, "Hunt must have a non-empty hunt title")
+      .check(usr -> usr.task != null && usr.task.length() > 0, "Hunt must have a non-empty hunt title")
+
       // .check(usr -> usr.email.matches(EMAIL_REGEX), "User must have a legal email")
       // .check(usr -> usr.age > 0, "User's age must be greater than zero")
       // .check(usr -> usr.age < REASONABLE_AGE_LIMIT, "User's age must be less than " + REASONABLE_AGE_LIMIT)

@@ -90,9 +90,9 @@ describe('Hunt list', () => {
   //   expect(huntList.serverFilteredHunts.some((hunt: Hunt) => hunt.name === 'Jamie')).toBe(true);
   // });
 
-  // it('doesn\'t contain a hunt named \'Santa\'', () => {
-  //   expect(huntList.serverFilteredHunts.some((hunt: Hunt) => hunt.name === 'Santa')).toBe(false);
-  // });
+  it('doesn\'t contain a hunt named \'Santa\'', () => {
+    expect(huntList.serverFilteredHunts.some((hunt: Hunt) => hunt.title === 'Santa')).toBe(false);
+  });
 
   // it('has two hunts that are 37 years old', () => {
   //   expect(huntList.serverFilteredHunts.filter((hunt: Hunt) => hunt.age === 37).length).toBe(2);
@@ -138,6 +138,7 @@ describe('Misbehaving hunt List', () => {
       fixture.detectChanges();
     });
   }));
+
 
   it('generates an error if we don\'t set up a huntListService', () => {
     const mockedMethod = spyOn(huntList, 'getHuntsFromServer').and.callThrough();
