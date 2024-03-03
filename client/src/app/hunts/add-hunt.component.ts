@@ -10,12 +10,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { HuntService } from 'src/app/hunts/hunt.service';
 import { NgFor } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @Component({
   selector: 'app-add-hunt',
   standalone: true,
-  imports: [NgFor, FormsModule, ReactiveFormsModule, MatCardModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatOptionModule, MatButtonModule],
+  imports: [HttpClientModule, NgFor, FormsModule, ReactiveFormsModule, MatCardModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatOptionModule, MatButtonModule],
   templateUrl: './add-hunt.component.html',
   styleUrl: './add-hunt.component.scss'
 })
@@ -111,7 +112,7 @@ export class AddHuntComponent {
   // the order the messages are defined in is the order they will display in.
   readonly addHuntValidationMessages = {
     title: [
-      {type: 'required', message: 'Name is required'},
+      {type: 'required', message: 'Title is required'},
       {type: 'minlength', message: 'Name must be at least 2 characters long'},
       {type: 'maxlength', message: 'Name cannot be more than 50 characters long'},
       {type: 'existingName', message: 'Name has already been taken'}

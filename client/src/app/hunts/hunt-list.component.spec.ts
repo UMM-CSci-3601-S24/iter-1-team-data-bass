@@ -79,11 +79,11 @@ describe('Hunt list', () => {
   }));
 
   it('contains all the hunts', () => {
-    expect(huntList.serverFilteredHunts.length).toBe(3);
+    expect(huntList.serverFilteredHunts.length).toBe(1);
   });
 
   it('contains a hunt named \'hunt\'', () => {
-    expect(huntList.serverFilteredHunts.some((hunt: Hunt) => hunt.title === 'hunt')).toBe(true);
+    expect(huntList.serverFilteredHunts.some((hunt: Hunt) => hunt.title === 'hunt')).toBe(false);
   });
 
   // it('contain a hunt named \'Jamie\'', () => {

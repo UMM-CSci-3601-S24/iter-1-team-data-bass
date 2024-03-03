@@ -7,11 +7,12 @@ import { map, switchMap, takeUntil } from 'rxjs/operators';
 import { Hunt } from './hunt';
 import { HuntCardComponent } from './hunt-card.component';
 import { HuntService } from './hunt.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-hunt-profile',
   standalone: true,
-  imports: [HuntCardComponent, MatCardModule],
+  imports: [HttpClientModule, HuntCardComponent, MatCardModule],
   templateUrl: './hunt-profile.component.html',
   styleUrl: './hunt-profile.component.scss'
 })

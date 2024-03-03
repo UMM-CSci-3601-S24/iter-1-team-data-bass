@@ -55,7 +55,7 @@ describe('HuntProfileComponent', () => {
     expect(component.hunt).toEqual(expectedHunt);
   });
 
-  it('should navigate to correct Hunt when the id parameter changes', () => {
+  it('should navigate to correct hunt when the id parameter changes', () => {
     let expectedHunt: Hunt = MockHuntService.testHunts[0];
     // Setting this should cause anyone subscribing to the paramMap
     // to update. Our `HuntProfileComponent` subscribes to that, so
@@ -69,7 +69,7 @@ describe('HuntProfileComponent', () => {
     expect(component.hunt).toEqual(expectedHunt);
   });
 
-  it('should have `null` for the Hunt for a bad ID', () => {
+  it('should have `null` for the hunt for a bad ID', () => {
     activatedRoute.setParamMap({ id: 'badID' });
 
     // If the given ID doesn't map to a Hunt, we expect the service
@@ -96,7 +96,7 @@ describe('HuntProfileComponent', () => {
     component.ngOnInit();
 
     expect(component.error).toEqual({
-      help: 'There was a problem loading the Hunt – try again.',
+      help: 'There was a problem loading the hunt – try again.',
       httpResponse: mockError.message,
       message: mockError.error.title,
     });
