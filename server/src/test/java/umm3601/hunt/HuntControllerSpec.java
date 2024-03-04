@@ -3,6 +3,7 @@ package umm3601.hunt;
 import static com.mongodb.client.model.Filters.eq;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -135,23 +137,6 @@ class HuntControllerSpec {
             // .append("role", "admin")
             // .append("avatar", "https://gravatar.com/avatar/8c9616d6cc5de638ea6920fb5d65fc6c?d=identicon"
             );
-    // testHunts.add(
-    //     new Document()
-    //         .append("name", "Pat")
-    //         .append("age", 37)
-    //         .append("company", "IBM")
-    //         .append("email", "pat@something.com")
-    //         .append("role", "editor")
-    //         .append("avatar", "https://gravatar.com/avatar/b42a11826c3bde672bce7e06ad729d44?d=identicon"));
-    // testHunts.add(
-    //     new Document()
-    //         .append("name", "Jamie")
-    //         .append("age", 37)
-    //         .append("company", "OHMNET")
-    //         .append("email", "jamie@frogs.com")
-    //         .append("role", "viewer")
-    //         .append("avatar", "https://gravatar.com/avatar/d4a6c71dd9470ad4cf58f78c100258bf?d=identicon"));
-
     samsId = new ObjectId();
     Document sam = new Document()
         .append("_id", samsId)
@@ -212,197 +197,6 @@ class HuntControllerSpec {
         huntArrayListCaptor.getValue().size());
   }
 
-  // @Test
-  // void canGetUsersWithAge37() throws IOException {
-  //   // Add a query param map to the context that maps "age" to "37".
-  //   Map<String, List<String>> queryParams = new HashMap<>();
-  //   queryParams.put(HuntController.AGE_KEY, Arrays.asList(new String[] {"37"}));
-  //   when(ctx.queryParamMap()).thenReturn(queryParams);
-  //   when(ctx.queryParamAsClass(HuntController.AGE_KEY, Integer.class))
-  //       .thenReturn(Validator.create(Integer.class, "37", HuntController.AGE_KEY));
-
-  //   HuntController.getUsers(ctx);
-
-  //   verify(ctx).json(userArrayListCaptor.capture());
-  //   verify(ctx).status(HttpStatus.OK);
-  //   assertEquals(2, userArrayListCaptor.getValue().size());
-  //   for (Hunt Hunt : userArrayListCaptor.getValue()) {
-  //     assertEquals(37, Hunt.age);
-  //   }
-  // }
-
-  // // We've included another approach for testing if everything behaves when we ask
-  // // for hunts that are 37
-  // @Test
-  // void canGetUsersWithAge37Redux() throws JsonMappingException, JsonProcessingException {
-  //   // When the controller calls `ctx.queryParamMap`, return the expected map for an
-  //   // "?age=37" query.
-  //   when(ctx.queryParamMap()).thenReturn(Map.of(HuntController.AGE_KEY, List.of("37")));
-  //   // When the controller calls `ctx.queryParamAsClass() to get the value
-  //   // associated with the "age" key, return an appropriate Validator.
-  //   Validator<Integer> validator = Validator.create(Integer.class, "37", HuntController.AGE_KEY);
-  //   when(ctx.queryParamAsClass(HuntController.AGE_KEY, Integer.class)).thenReturn(validator);
-
-  //   // Call the method under test.
-  //   HuntController.getUsers(ctx);
-
-  //   // Verify that `getUsers` included a call to `ctx.status(HttpStatus.OK)` at some
-  //   // point.
-  //   verify(ctx).status(HttpStatus.OK);
-
-  //   // Instead of using the Captor like in many other tests, we will use an
-  //   // ArgumentMatcher just to show that it can be done and illustrate
-  //   // another way to test the same thing.
-  //   // Verify that `ctx.json()` is called with a `List` of `Hunt`s.
-  //   // Each of those `Hunt`s should have age 37.
-  //   verify(ctx).json(argThat(new ArgumentMatcher<List<Hunt>>() {
-  //     @Override
-  //     public boolean matches(List<Hunt> hunts) {
-  //       for (Hunt Hunt : hunts) {
-  //         assertEquals(37, Hunt.age);
-  //       }
-  //       return true;
-  //     }
-  //   }));
-  // }
-
-  // /**
-  //  * Test that if the Hunt sends a request with an illegal value in
-  //  * the age field (i.e., something that can't be parsed to a number)
-  //  * we get a reasonable error code back.
-  //  */
-  // @Test
-  // void respondsAppropriatelyToNonNumericAge() {
-  //   Map<String, List<String>> queryParams = new HashMap<>();
-  //   queryParams.put(HuntController.AGE_KEY, Arrays.asList(new String[] {"bad"}));
-  //   when(ctx.queryParamMap()).thenReturn(queryParams);
-  //   when(ctx.queryParamAsClass(HuntController.AGE_KEY, Integer.class))
-  //       .thenReturn(Validator.create(Integer.class, "bad", HuntController.AGE_KEY));
-
-  //   // This should now throw a `ValidationException` because
-  //   // our request has an age that can't be parsed to a number,
-  //   // but I don't yet know how to make the message be anything specific
-  //   assertThrows(ValidationException.class, () -> {
-  //     HuntController.getUsers(ctx);
-  //   });
-  // }
-
-  // /**
-  //  * Test that if the Hunt sends a request with an illegal value in
-  //  * the age field (i.e., too big of a number)
-  //  * we get a reasonable error code back.
-  //  */
-  // @Test
-  // void respondsAppropriatelyToTooLargeNumberAge() {
-  //   Map<String, List<String>> queryParams = new HashMap<>();
-  //   queryParams.put(HuntController.AGE_KEY, Arrays.asList(new String[] {"151"}));
-  //   when(ctx.queryParamMap()).thenReturn(queryParams);
-  //   when(ctx.queryParamAsClass(HuntController.AGE_KEY, Integer.class))
-  //       .thenReturn(Validator.create(Integer.class, "151", HuntController.AGE_KEY));
-
-  //   // This should now throw a `ValidationException` because
-  //   // our request has an age that is larger than 150, which isn't allowed,
-  //   // but I don't yet know how to make the message be anything specific
-  //   assertThrows(ValidationException.class, () -> {
-  //     HuntController.getUsers(ctx);
-  //   });
-  // }
-
-  // /**
-  //  * Test that if the Hunt sends a request with an illegal value in
-  //  * the age field (i.e., too small of a number)
-  //  * we get a reasonable error code back.
-  //  */
-  // @Test
-  // void respondsAppropriatelyToTooSmallNumberAge() {
-  //   Map<String, List<String>> queryParams = new HashMap<>();
-  //   queryParams.put(HuntController.AGE_KEY, Arrays.asList(new String[] {"-1"}));
-  //   when(ctx.queryParamMap()).thenReturn(queryParams);
-  //   when(ctx.queryParamAsClass(HuntController.AGE_KEY, Integer.class))
-  //       .thenReturn(Validator.create(Integer.class, "-1", HuntController.AGE_KEY));
-
-  //   // This should now throw a `ValidationException` because
-  //   // our request has an age that is smaller than 0, which isn't allowed,
-  //   // but I don't yet know how to make the message be anything specific
-  //   assertThrows(ValidationException.class, () -> {
-  //     HuntController.getUsers(ctx);
-  //   });
-  // }
-
-  // @Test
-  // void canGetUsersWithCompany() throws IOException {
-  //   Map<String, List<String>> queryParams = new HashMap<>();
-  //   queryParams.put(HuntController.COMPANY_KEY, Arrays.asList(new String[] {"OHMNET"}));
-  //   queryParams.put(HuntController.SORT_ORDER_KEY, Arrays.asList(new String[] {"desc"}));
-  //   when(ctx.queryParamMap()).thenReturn(queryParams);
-  //   when(ctx.queryParam(HuntController.COMPANY_KEY)).thenReturn("OHMNET");
-  //   when(ctx.queryParam(HuntController.SORT_ORDER_KEY)).thenReturn("desc");
-
-  //   HuntController.getUsers(ctx);
-
-  //   verify(ctx).json(userArrayListCaptor.capture());
-  //   verify(ctx).status(HttpStatus.OK);
-
-  //   // Confirm that all the hunts passed to `json` work for OHMNET.
-  //   for (Hunt Hunt : userArrayListCaptor.getValue()) {
-  //     assertEquals("OHMNET", Hunt.company);
-  //   }
-  // }
-
-  // @Test
-  // void canGetUsersWithCompanyLowercase() throws IOException {
-  //   Map<String, List<String>> queryParams = new HashMap<>();
-  //   queryParams.put(HuntController.COMPANY_KEY, Arrays.asList(new String[] {"ohm"}));
-  //   when(ctx.queryParamMap()).thenReturn(queryParams);
-  //   when(ctx.queryParam(HuntController.COMPANY_KEY)).thenReturn("ohm");
-
-  //   HuntController.getUsers(ctx);
-
-  //   verify(ctx).json(userArrayListCaptor.capture());
-  //   verify(ctx).status(HttpStatus.OK);
-
-  //   // Confirm that all the hunts passed to `json` work for OHMNET.
-  //   for (Hunt Hunt : userArrayListCaptor.getValue()) {
-  //     assertEquals("OHMNET", Hunt.company);
-  //   }
-  // }
-
-  // @Test
-  // void getUsersByRole() throws IOException {
-  //   Map<String, List<String>> queryParams = new HashMap<>();
-  //   queryParams.put(HuntController.ROLE_KEY, Arrays.asList(new String[] {"viewer"}));
-  //   when(ctx.queryParamMap()).thenReturn(queryParams);
-  //   when(ctx.queryParamAsClass(HuntController.ROLE_KEY, String.class))
-  //       .thenReturn(Validator.create(String.class, "viewer", HuntController.ROLE_KEY));
-
-  //   HuntController.getUsers(ctx);
-
-  //   verify(ctx).json(userArrayListCaptor.capture());
-  //   verify(ctx).status(HttpStatus.OK);
-  //   assertEquals(2, userArrayListCaptor.getValue().size());
-  // }
-
-  // @Test
-  // void getUsersByCompanyAndAge() throws IOException {
-  //   Map<String, List<String>> queryParams = new HashMap<>();
-  //   queryParams.put(HuntController.COMPANY_KEY, Arrays.asList(new String[] {"OHMNET"}));
-  //   queryParams.put(HuntController.AGE_KEY, Arrays.asList(new String[] {"37"}));
-  //   when(ctx.queryParamMap()).thenReturn(queryParams);
-  //   when(ctx.queryParam(HuntController.COMPANY_KEY)).thenReturn("OHMNET");
-  //   when(ctx.queryParamAsClass(HuntController.AGE_KEY, Integer.class))
-  //       .thenReturn(Validator.create(Integer.class, "37", HuntController.AGE_KEY));
-
-  //   HuntController.getUsers(ctx);
-
-  //   verify(ctx).json(userArrayListCaptor.capture());
-  //   verify(ctx).status(HttpStatus.OK);
-  //   assertEquals(1, userArrayListCaptor.getValue().size());
-  //   for (Hunt Hunt : userArrayListCaptor.getValue()) {
-  //     assertEquals("OHMNET", Hunt.company);
-  //     assertEquals(37, Hunt.age);
-  //   }
-  // }
-
   @Test
   void getHuntWithExistentId() throws IOException {
     String id = samsId.toHexString();
@@ -439,112 +233,6 @@ class HuntControllerSpec {
     assertEquals("The requested hunt was not found", exception.getMessage());
   }
 
-  // @Captor
-  // private ArgumentCaptor<ArrayList<UserByCompany>> userByCompanyListCaptor;
-
-  // @Test
-  // void testGetUsersGroupedByCompany() {
-  //   when(ctx.queryParam("sortBy")).thenReturn("company");
-  //   when(ctx.queryParam("sortOrder")).thenReturn("asc");
-  //   HuntController.getUsersGroupedByCompany(ctx);
-
-  //   // Capture the argument to `ctx.json()`
-  //   verify(ctx).json(userByCompanyListCaptor.capture());
-
-  //   // Get the value that was passed to `ctx.json()`
-  //   ArrayList<UserByCompany> result = userByCompanyListCaptor.getValue();
-
-  //   // There are 3 companies in the test data, so we should have 3 entries in the
-  //   // result.
-  //   assertEquals(3, result.size());
-
-  //   // The companies should be in alphabetical order by company name,
-  //   // and with Hunt counts of 1, 2, and 1, respectively.
-  //   UserByCompany ibm = result.get(0);
-  //   assertEquals("IBM", ibm._id);
-  //   assertEquals(1, ibm.count);
-  //   UserByCompany ohmnet = result.get(1);
-  //   assertEquals("OHMNET", ohmnet._id);
-  //   assertEquals(2, ohmnet.count);
-  //   UserByCompany umm = result.get(2);
-  //   assertEquals("UMM", umm._id);
-  //   assertEquals(1, umm.count);
-
-  //   // The hunts for OHMNET should be Jamie and Sam, although we don't
-  //   // know what order they'll be in.
-  //   assertEquals(2, ohmnet.hunts.size());
-  //   assertTrue(ohmnet.hunts.get(0).name.equals("Jamie") || ohmnet.hunts.get(0).name.equals("Sam"),
-  //       "First Hunt should have name 'Jamie' or 'Sam'");
-  //   assertTrue(ohmnet.hunts.get(1).name.equals("Jamie") || ohmnet.hunts.get(1).name.equals("Sam"),
-  //       "Second Hunt should have name 'Jamie' or 'Sam'");
-  // }
-
-  // @Test
-  // void testGetUsersGroupedByCompanyDescending() {
-  //   when(ctx.queryParam("sortBy")).thenReturn("company");
-  //   when(ctx.queryParam("sortOrder")).thenReturn("desc");
-  //   HuntController.getUsersGroupedByCompany(ctx);
-
-  //   // Capture the argument to `ctx.json()`
-  //   verify(ctx).json(userByCompanyListCaptor.capture());
-
-  //   // Get the value that was passed to `ctx.json()`
-  //   ArrayList<UserByCompany> result = userByCompanyListCaptor.getValue();
-
-  //   // There are 3 companies in the test data, so we should have 3 entries in the
-  //   // result.
-  //   assertEquals(3, result.size());
-
-  //   // The companies should be in reverse alphabetical order by company name,
-  //   // and with Hunt counts of 1, 2, and 1, respectively.
-  //   UserByCompany umm = result.get(0);
-  //   assertEquals("UMM", umm._id);
-  //   assertEquals(1, umm.count);
-  //   UserByCompany ohmnet = result.get(1);
-  //   assertEquals("OHMNET", ohmnet._id);
-  //   assertEquals(2, ohmnet.count);
-  //   UserByCompany ibm = result.get(2);
-  //   assertEquals("IBM", ibm._id);
-  //   assertEquals(1, ibm.count);
-  // }
-
-  // @Test
-  // void testGetUsersGroupedByCompanyOrderedByCount() {
-  //   when(ctx.queryParam("sortBy")).thenReturn("count");
-  //   when(ctx.queryParam("sortOrder")).thenReturn("asc");
-  //   HuntController.getUsersGroupedByCompany(ctx);
-
-  //   // Capture the argument to `ctx.json()`
-  //   verify(ctx).json(userByCompanyListCaptor.capture());
-
-  //   // Get the value that was passed to `ctx.json()`
-  //   ArrayList<UserByCompany> result = userByCompanyListCaptor.getValue();
-
-  //   // There are 3 companies in the test data, so we should have 3 entries in the
-  //   // result.
-  //   assertEquals(3, result.size());
-
-  //   // The companies should be in order by Hunt count, and with counts of 1, 1, and
-  //   // 2,
-  //   // respectively. We don't know which order "IBM" and "UMM" will be in, since
-  //   // they
-  //   // both have a count of 1. So we'll get them both and then swap them if
-  //   // necessary.
-  //   UserByCompany ibm = result.get(0);
-  //   UserByCompany umm = result.get(1);
-  //   if (ibm._id.equals("UMM")) {
-  //     umm = result.get(0);
-  //     ibm = result.get(1);
-  //   }
-  //   UserByCompany ohmnet = result.get(2);
-  //   assertEquals("IBM", ibm._id);
-  //   assertEquals(1, ibm.count);
-  //   assertEquals("UMM", umm._id);
-  //   assertEquals(1, umm.count);
-  //   assertEquals("OHMNET", ohmnet._id);
-  //   assertEquals(2, ohmnet.count);
-  // }
-
   @Test
   void addHunt() throws IOException {
     String testNewHunt = """
@@ -579,95 +267,13 @@ class HuntControllerSpec {
     // assertNotNull(addedHunt.get("avatar"));
   }
 
-  // @Test
-  // void addInvalidEmailUser() throws IOException {
-  //   String testNewUser = """
-  //       {
-  //         "name": "Test Hunt",
-  //         "age": 25,
-  //         "company": "testers",
-  //         "email": "invalidemail",
-  //         "role": "viewer"
-  //       }
-  //       """;
-  //   when(ctx.bodyValidator(Hunt.class))
-  //       .then(value -> new BodyValidator<Hunt>(testNewUser, Hunt.class, javalinJackson));
-
-  //   assertThrows(ValidationException.class, () -> {
-  //     HuntController.addNewUser(ctx);
-  //   });
-
-  //   // Our status should be 400, because our request contained information that
-  //   // didn't validate.
-  //   // However, I'm not yet sure how to test the specifics about validation problems
-  //   // encountered.
-  //   // verify(ctx).status(HttpStatus.BAD_REQUEST);
-  // }
-
-  // @Test
-  // void addInvalidAgeUser() throws IOException {
-  //   String testNewUser = """
-  //       {
-  //         "name": "Test Hunt",
-  //         "age": "notanumber",
-  //         "company": "testers",
-  //         "email": "test@example.com",
-  //         "role": "viewer"
-  //       }
-  //       """;
-  //   when(ctx.bodyValidator(Hunt.class))
-  //       .then(value -> new BodyValidator<Hunt>(testNewUser, Hunt.class, javalinJackson));
-
-  //   assertThrows(ValidationException.class, () -> {
-  //     HuntController.addNewUser(ctx);
-  //   });
-  // }
-
-  // @Test
-  // void add0AgeUser() throws IOException {
-  //   String testNewUser = """
-  //       {
-  //         "name": "Test Hunt",
-  //         "age": 0,
-  //         "company": "testers",
-  //         "email": "test@example.com",
-  //         "role": "viewer"
-  //       }
-  //       """;
-  //   when(ctx.bodyValidator(Hunt.class))
-  //       .then(value -> new BodyValidator<Hunt>(testNewUser, Hunt.class, javalinJackson));
-
-  //   assertThrows(ValidationException.class, () -> {
-  //     HuntController.addNewUser(ctx);
-  //   });
-  // }
-
-  // @Test
-  // void add150AgeUser() throws IOException {
-  //   String testNewUser = """
-  //       {
-  //         "name": "Test Hunt",
-  //         "age": 150,
-  //         "company": "testers",
-  //         "email": "test@example.com",
-  //         "role": "viewer"
-  //       }
-  //       """;
-  //   when(ctx.bodyValidator(Hunt.class))
-  //       .then(value -> new BodyValidator<Hunt>(testNewUser, Hunt.class, javalinJackson));
-
-  //   assertThrows(ValidationException.class, () -> {
-  //     HuntController.addNewUser(ctx);
-  //   });
-  // }
-
   @Test
   void addNullTitleHunt() throws IOException {
     String testNewHunt = """
         {
           "hostid": 25,
           "description": "testers",
-          "task": "test@example.com",
+          "task": "test@example.com"
         }
         """;
     when(ctx.bodyValidator(Hunt.class))
@@ -685,7 +291,7 @@ class HuntControllerSpec {
           "title": "",
           "hostid": "25",
           "description": "testers",
-          "task": "test@example.com",
+          "task": "test@example.com"
 
         }
         """;
@@ -739,7 +345,7 @@ class HuntControllerSpec {
           "title": "joe",
           "hostid": "joe",
           "task": "",
-          "description": "test@example.com",
+          "description": "test@example.com"
         }
         """;
     when(ctx.bodyValidator(Hunt.class))
@@ -785,65 +391,35 @@ class HuntControllerSpec {
     assertEquals(0, db.getCollection("hunts").countDocuments(eq("_id", new ObjectId(testID))));
   }
 
-  /**
-   * Test that the `generateAvatar` method works as expected.
-   *
-   * To test this code, we need to mock out the `md5()` method so we
-   * can control what it returns. This way we don't have to figure
-   * out what the actual md5 hash of a particular email address is.
-   *
-   * The use of `Mockito.spy()` essentially allows us to override
-   * the `md5()` method, while leaving the rest of the Hunt controller
-   * "as is". This is a nice way to test a method that depends on
-   * an internal method that we don't want to test (`md5()` in this case).
-   *
-   * This code was suggested by GitHub CoPilot.
-   *
-   * @throws NoSuchAlgorithmException
-   */
-  // @Test
-  // void testGenerateAvatar() throws NoSuchAlgorithmException {
-  //   // Arrange
-  //   String email = "test@example.com";
-  //   HuntController controller = Mockito.spy(HuntController);
-  //   when(controller.md5(email)).thenReturn("md5hash");
+  @Test
+  void constructFilterWithHostKey() {
+    when(ctx.queryParamMap()).thenReturn(Map.of(HuntController.HOST_KEY, List.of("testHost")));
+    when(ctx.queryParam(HuntController.HOST_KEY)).thenReturn("testHost");
+    Bson filter = huntController.constructFilter(ctx);
+    assertNotNull(filter);
+  }
 
-  //   // Act
-  //   String avatar = controller.generateAvatar(email);
+  @Test
+  void constructFilterWithTitleKey() {
+    when(ctx.queryParamMap()).thenReturn(Map.of(HuntController.TITLE_KEY, List.of("testHost")));
+    when(ctx.queryParam(HuntController.TITLE_KEY)).thenReturn("testHost");
+    Bson filter = huntController.constructFilter(ctx);
+    assertNotNull(filter);
+  }
 
-  //   // Assert
-  //   assertEquals("https://gravatar.com/avatar/md5hash?d=identicon", avatar);
-  // }
+  @Test
+  void constructFilterWithDescriptionKey() {
+    when(ctx.queryParamMap()).thenReturn(Map.of(HuntController.DESCRIPTION_KEY, List.of("testHost")));
+    when(ctx.queryParam(HuntController.DESCRIPTION_KEY)).thenReturn("testHost");
+    Bson filter = huntController.constructFilter(ctx);
+    assertNotNull(filter);
+  }
 
-  /**
-   * Test that the `generateAvatar` throws a `NoSuchAlgorithmException`
-   * if it can't find the `md5` hashing algortihm.
-   *
-   * To test this code, we need to mock out the `md5()` method so we
-   * can control what it returns. In particular, we want `.md5()` to
-   * throw a `NoSuchAlgorithmException`, which we can't do without
-   * mocking `.md5()` (since the algorithm does actually exist).
-   *
-   * The use of `Mockito.spy()` essentially allows us to override
-   * the `md5()` method, while leaving the rest of the Hunt controller
-   * "as is". This is a nice way to test a method that depends on
-   * an internal method that we don't want to test (`md5()` in this case).
-   *
-   * This code was suggested by GitHub CoPilot.
-   *
-  //  * @throws NoSuchAlgorithmException
-  //  */
-  // @Test
-  // void testGenerateAvatarWithException() throws NoSuchAlgorithmException {
-  //   // Arrange
-  //   String email = "test@example.com";
-  //   HuntController controller = Mockito.spy(HuntController);
-  //   when(controller.md5(email)).thenThrow(NoSuchAlgorithmException.class);
-
-  //   // Act
-  //   String avatar = controller.generateAvatar(email);
-
-  //   // Assert
-  //   assertEquals("https://gravatar.com/avatar/?d=mp", avatar);
-  // }
+  @Test
+  void constructFilterWithTaskKey() {
+    when(ctx.queryParamMap()).thenReturn(Map.of(HuntController.TASK_KEY, List.of("testHost")));
+    when(ctx.queryParam(HuntController.TASK_KEY)).thenReturn("testHost");
+    Bson filter = huntController.constructFilter(ctx);
+    assertNotNull(filter);
+  }
 }

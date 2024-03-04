@@ -118,10 +118,9 @@ public void getHunts(Context ctx) {
   // *   to filter the database collection of hunts
   // */
 
- private Bson constructFilter(Context ctx) {
+ Bson constructFilter(Context ctx) {
   List<Bson> filters = new ArrayList<>();
   // starts with an empty list of filer.
-
   if (ctx.queryParamMap().containsKey(HOST_KEY)) {
     Pattern pattern = Pattern.compile(Pattern.quote(ctx.queryParam(HOST_KEY)), Pattern.CASE_INSENSITIVE);
     filters.add(regex(HOST_KEY, pattern));
@@ -197,9 +196,8 @@ public void getHunts(Context ctx) {
      *    - A non-blank company is provided
      * If any of these checks fail, the Javalin system will throw a
      * `BadRequestResponse` with an appropriate error message.
-     */
-    System.err.println("Adding new hunt");
-    System.err.println(ctx.body());
+      */
+
     Hunt newHunt = ctx.bodyValidator(Hunt.class)
       .check(usr -> usr.title != null && usr.title.length() > 0, "Hunt must have a non-empty hunt title")
       .check(usr -> usr.hostid != null && usr.hostid.length() > 0, "Hunt must have a non-empty hunt title")
