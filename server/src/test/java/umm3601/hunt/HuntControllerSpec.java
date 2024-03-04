@@ -552,8 +552,7 @@ class HuntControllerSpec {
           "title": "Test Hunt",
           "hostid": "25",
           "description": "testers",
-          "task": "test@example.com",
-
+          "task": "test@example.com"
         }
         """;
     when(ctx.bodyValidator(Hunt.class))
@@ -576,7 +575,7 @@ class HuntControllerSpec {
     assertEquals("25", addedHunt.get(HuntController.HOST_KEY));
     assertEquals("testers", addedHunt.get(HuntController.DESCRIPTION_KEY));
     // assertEquals("test@example.com", addedHunt.get("email"));
-    assertEquals("viewer", addedHunt.get(HuntController.TASK_KEY));
+    assertEquals("test@example.com", addedHunt.get(HuntController.TASK_KEY));
     // assertNotNull(addedHunt.get("avatar"));
   }
 

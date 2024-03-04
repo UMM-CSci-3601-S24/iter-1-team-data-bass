@@ -198,6 +198,8 @@ public void getHunts(Context ctx) {
      * If any of these checks fail, the Javalin system will throw a
      * `BadRequestResponse` with an appropriate error message.
      */
+    System.err.println("Adding new hunt");
+    System.err.println(ctx.body());
     Hunt newHunt = ctx.bodyValidator(Hunt.class)
       .check(usr -> usr.title != null && usr.title.length() > 0, "Hunt must have a non-empty hunt title")
       .check(usr -> usr.hostid != null && usr.hostid.length() > 0, "Hunt must have a non-empty hunt title")
