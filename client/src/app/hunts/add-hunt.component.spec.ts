@@ -15,8 +15,8 @@ import { MockHuntService } from 'src/testing/hunt.service.mock';
 import { AddHuntComponent } from './add-hunt.component';
 import { HuntProfileComponent } from './hunt-profile.component';
 import { HuntService } from './hunt.service';
-// import { of } from 'rxjs';
-// import { fakeAsync, flush, tic } from '@angular/core/testing'
+//import { of } from 'rxjs';
+//import { fakeAsync, flush, tic } from '@angular/core/testing'
 
 describe('AddHuntComponent', () => {
   let addHuntComponent: AddHuntComponent;

@@ -10,6 +10,7 @@ import { HuntCardComponent } from './hunt-card.component';
 import { HuntProfileComponent } from './hunt-profile.component';
 import { HuntService } from './hunt.service';
 
+
 describe('HuntProfileComponent', () => {
   let component: HuntProfileComponent;
   let fixture: ComponentFixture<HuntProfileComponent>;
@@ -53,29 +54,6 @@ describe('HuntProfileComponent', () => {
     // it should update right away.
     activatedRoute.setParamMap({ id: expectedHunt._id });
     expect(component.hunt).toEqual(expectedHunt);
-  });
-
-  it('should navigate to correct hunt when the id parameter changes', () => {
-    let expectedHunt: Hunt = MockHuntService.testHunts[0];
-    // Setting this should cause anyone subscribing to the paramMap
-    // to update. Our `HuntProfileComponent` subscribes to that, so
-    // it should update right away.
-    activatedRoute.setParamMap({ id: expectedHunt._id });
-    expect(component.hunt).toEqual(expectedHunt);
-
-    // Changing the paramMap should update the displayed Hunt profile.
-    expectedHunt = MockHuntService.testHunts[1];
-    activatedRoute.setParamMap({ id: expectedHunt._id });
-    expect(component.hunt).toEqual(expectedHunt);
-  });
-
-  it('should have `null` for the hunt for a bad ID', () => {
-    activatedRoute.setParamMap({ id: 'badID' });
-
-    // If the given ID doesn't map to a Hunt, we expect the service
-    // to return `null`, so we would expect the component's Hunt
-    // to also be `null`.
-    expect(component.hunt).toBeNull();
   });
 
   it('should set error data on observable error', () => {

@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { HuntService } from './hunt.service';
 
 describe('HuntService', () => {
