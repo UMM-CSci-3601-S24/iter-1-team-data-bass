@@ -1,0 +1,70 @@
+<div class="flex-row">
+  <div class="flex-1">
+    <form [formGroup]="addHuntForm" (ngSubmit)="submitForm();">
+      <mat-card class="add-hunt-card">
+        <mat-card-header>
+          <mat-card-title class="add-hunt-title">New Hunt</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="flex-col">
+            <mat-form-field>
+              <mat-label>Host Name</mat-label>
+              <input matInput formControlName="hostid"
+                required>
+              @if (formControlHasError('hostid')) {
+                <mat-error data-test="hostid">
+                  {{getErrorMessage('hostid')}}
+                </mat-error>
+              }
+            </mat-form-field>
+
+
+
+            <mat-form-field>
+              <mat-label>Title</mat-label>
+              <input matInput formControlName="title"
+                required>
+              @if (formControlHasError('title')) {
+                <mat-error data-test="title">
+                  {{getErrorMessage('title')}}
+                </mat-error>
+              }
+            </mat-form-field>
+
+
+
+            <mat-form-field>
+              <mat-label>Description</mat-label>
+              <input matInput formControlName="description"
+                required>
+              @if (formControlHasError('description')) {
+                <mat-error data-test="description">
+                  {{getErrorMessage('description')}}
+                </mat-error>
+              }
+            </mat-form-field>
+            
+            <mat-form-field>
+                <label for="taskList">Task List (Write in numbered list of tasks):</label>
+                <textarea matInput formControlName="task"></textarea>
+            </mat-form-field>
+          </div>
+
+        </mat-card-content>
+        <mat-card-actions align="end">
+          <button
+            mat-button
+            type="button"
+            color="primary"
+            [disabled]="!addHuntForm.valid"
+            type="submit"
+            data-test="confirmAddHuntButton"
+            >
+            ADD HUNT
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </form>
+  </div>
+</div>
+
