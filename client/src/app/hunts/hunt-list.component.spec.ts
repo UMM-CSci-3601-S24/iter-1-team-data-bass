@@ -119,5 +119,26 @@ describe('Hunt list', () => {
     );
   });
 
+  it('should handle client-side ErrorEvent during getHuntsFromServer', () => {
+    // Arrange
+    const errorEvent = new ErrorEvent('Network error', { message: 'Failed to fetch' });
+    const huntService = TestBed.inject(HuntService);
+    spyOn(huntService, 'getHunts').and.returnValue(throwError({ error: errorEvent }));
+
+    const snackBar = TestBed.inject(MatSnackBar);
+    spyOn(snackBar, 'open');
+
+    // Act
+    huntList.getHuntsFromServer();
+
+    // Assert
+    expect(huntList.errMsg).toContain('Problem in the client');
+    expect(snackBar.open).toHaveBeenCalledWith(
+      'Problem in the client - Error: Failed to fetch',
+      'OK',
+      { duration: 6000 }
+    );
+  });
+
 
 });
