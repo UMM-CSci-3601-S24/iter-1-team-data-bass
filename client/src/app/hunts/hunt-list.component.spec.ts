@@ -15,7 +15,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Observable } from 'rxjs';
 import { MockHuntService } from '../../testing/hunt.service.mock';
 import { Hunt } from './hunt';
 import { HuntCardComponent } from './hunt-card.component';
