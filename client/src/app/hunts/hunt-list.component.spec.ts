@@ -11,7 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -21,6 +21,7 @@ import { HuntCardComponent } from './hunt-card.component';
 import { HuntListComponent } from './hunt-list.component';
 import { HuntService } from './hunt.service';
 import { HttpClientModule } from '@angular/common/http';
+import { throwError } from 'rxjs';
 
 const COMMON_IMPORTS: unknown[] = [
   HttpClientModule,
@@ -98,4 +99,25 @@ describe('Hunt list', () => {
   // it('has two hunts that are 37 years old', () => {
   //   expect(huntList.serverFilteredHunts.filter((hunt: Hunt) => hunt.age === 37).length).toBe(2);
   // });
+  it('should handle non-ErrorEvent errors during getHuntsFromServer', () => {
+    // Arrange
+    const huntService = TestBed.inject(HuntService);
+    spyOn(huntService, 'getHunts').and.returnValue(throwError({ status: 500, message: 'Internal Server Error' }));
+
+    const snackBar = TestBed.inject(MatSnackBar);
+    spyOn(snackBar, 'open');
+
+    // Act
+    huntList.getHuntsFromServer();
+
+    // Assert
+    expect(huntList.errMsg).toContain('Problem on the server');
+    expect(snackBar.open).toHaveBeenCalledWith(
+      'Problem on the server - Error Code: 500\nMessage: Internal Server Error',
+      'OK',
+      { duration: 6000 }
+    );
+  });
+
+
 });
