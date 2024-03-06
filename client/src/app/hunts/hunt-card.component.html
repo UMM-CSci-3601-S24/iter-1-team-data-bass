@@ -1,0 +1,16 @@
+
+
+@if (this.hunt) {
+ <a class="hunt-card-link" [routerLink]="['/hunts', hunt._id]">
+  <div class="card">
+    <h1 class="card-header">{{  hunt.title }}</h1>
+    <div class="card-body">
+      <h3 class="card-title">{{ "Host: " + hunt.hostid }}</h3>
+      <h3 class="card-text">{{ "Description: " + hunt.description }}</h3>
+      <h3 class="card-text">{{ "Task: " + hunt.task }}</h3>
+      <a class="btn btn-primary" href="hunts/{{hunt._id}}">View Hunt</a>
+    </div>
+  </div>
+</a>
+
+}
