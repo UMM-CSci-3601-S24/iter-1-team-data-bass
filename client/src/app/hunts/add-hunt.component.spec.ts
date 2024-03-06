@@ -62,6 +62,41 @@ describe('AddHuntComponent', () => {
     expect(addHuntForm).toBeTruthy();
   });
 
+  it('should add a new textarea when addTextarea is called', () => {
+    const initialTextareaCount = addHuntComponent.textAreasList.length;
+    addHuntComponent.addTextarea();
+    expect(addHuntComponent.textAreasList.length).toBe(initialTextareaCount + 1);
+  });
+
+  it('should remove a textarea when removeTextArea is called', () => {
+    addHuntComponent.textAreasList = ['text_area1', 'text_area2', 'text_area3'];
+    const initialTextareaCount = addHuntComponent.textAreasList.length;
+    addHuntComponent.removeTextArea(1);
+    expect(addHuntComponent.textAreasList.length).toBe(initialTextareaCount - 1);
+    expect(addHuntComponent.textAreasList).not.toContain('text_area2');
+  });
+
+  it('should set form controls with valid values', () => {
+    const validTitle = 'Valid Title';
+    const validHostId = 'ValidHost123';
+    const validDescription = 'Valid Description';
+    const validTask = 'Valid Task';
+
+    addHuntComponent.addHuntForm.setValue({
+      title: validTitle,
+      hostid: validHostId,
+      description: validDescription,
+      task: validTask,
+    });
+
+    expect(addHuntComponent.addHuntForm.get('title').value).toBe(validTitle);
+    expect(addHuntComponent.addHuntForm.get('hostid').value).toBe(validHostId);
+    expect(addHuntComponent.addHuntForm.get('description').value).toBe(validDescription);
+    expect(addHuntComponent.addHuntForm.get('task').value).toBe(validTask);
+  });
+
+  
+
   // Confirms that an initial, empty form is *not* valid, so
   // people can't submit an empty form.
   it('form should be invalid when empty', () => {
