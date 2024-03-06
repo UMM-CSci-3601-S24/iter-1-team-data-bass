@@ -29,6 +29,25 @@ export class HuntService {
   *   from the server after a possibly substantial delay (because we're
   *   contacting a remote server over the Internet).
   */
+
+  // Inside the HuntService class
+getHostKey(): string {
+  return this.hostKey;
+}
+
+getTitleKey(): string {
+  return this.titleKey;
+}
+
+getTaskKey(): string {
+  return this.taskKey;
+}
+
+getDescriptionKey(): string {
+  return this.descriptionKey;
+}
+
+
   getHunts(filters?: { hostid?: string; title?: string; task: string; description: string}): Observable<Hunt[]> {
     let httpParams: HttpParams = new HttpParams();
     if (filters) {

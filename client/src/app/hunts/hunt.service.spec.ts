@@ -5,6 +5,8 @@ import { TestBed } from "@angular/core/testing";
 import { Hunt } from "./hunt";
 
 describe ('HuntService', () => {
+  let service: HuntService;
+  let httpMock: HttpTestingController;
   const testHunts: Hunt[] = [
     {
       _id: 'chris_id',
@@ -39,6 +41,8 @@ describe ('HuntService', () => {
       providers: [HuntService]
     });
 
+    service = TestBed.inject(HuntService);
+    httpMock = TestBed.inject(HttpTestingController);
     httpClient = TestBed.inject(HttpClient);
     httpTestingController = TestBed.inject(HttpTestingController);
     huntService = TestBed.inject(HuntService);
@@ -52,6 +56,26 @@ describe ('HuntService', () => {
     expect(huntService).toBeTruthy();
   });
 
+  it('should send a GET request with filters', () => {
+    const filters = { hostid: '123', title: 'Test', task: 'Task', description: 'Description' };
+
+    service.getHunts(filters).subscribe();
+
+    const request = httpMock.expectOne(req => {
+      return (
+        req.url === `${service.huntUrl}` &&
+        req.method === 'GET' &&
+        req.params.get(service['getHostKey']()) === filters.hostid &&
+        req.params.get(service['getTitleKey']()) === filters.title &&
+        req.params.get(service['getTaskKey']()) === filters.task &&
+        req.params.get(service['getDescriptionKey']()) === filters.description
+      );
+    });
+
+    request.flush([]);
+  });
+
+
   it('getHunts() calls api/hunts', () => {
     huntService.getHunts().subscribe(
       hunts => expect(hunts).toBe(testHunts)
@@ -62,12 +86,15 @@ describe ('HuntService', () => {
     req.flush(testHunts);
   });
 
+
   it('getHuntById() calls api/hunts/id', () => {
     const targetHunt: Hunt = testHunts[1];
     const targetId: string = targetHunt._id;
     huntService.getHuntById(targetId).subscribe(
       hunt => expect(hunt).toBe(targetHunt)
     );
+
+
 
     const expectedUrl: string = `${huntService.huntUrl}/${targetId}`;
     const req = httpTestingController.expectOne(expectedUrl);
