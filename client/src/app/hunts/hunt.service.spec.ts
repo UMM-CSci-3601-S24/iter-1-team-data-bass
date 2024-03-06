@@ -89,15 +89,13 @@ describe ('HuntService', () => {
   it('getHunts() calls api/hunts with filter parameter', () => {
     const hostid = 'chris_id';
     huntService.getHunts({
-      hostid,
-      task: "",
-      description: ""
+      hostid: hostid
     }).subscribe(
       hunts => expect(hunts).toBe(testHunts)
     );
 
     const req = httpTestingController.expectOne(
-      req => req.url.includes(`hostid=${hostid}`)
+      req => req.urlWithParams.includes(`hostid=${hostid}`)
     );
     expect(req.request.method).toEqual('GET');
     req.flush(testHunts);

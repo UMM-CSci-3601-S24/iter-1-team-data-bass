@@ -48,7 +48,7 @@ getDescriptionKey(): string {
 }
 
 
-  getHunts(filters?: { hostid?: string; title?: string; task: string; description: string}): Observable<Hunt[]> {
+  getHunts(filters?: { hostid?: string; title?: string; task?: string; description?: string}): Observable<Hunt[]> {
     let httpParams: HttpParams = new HttpParams();
     if (filters) {
       if (filters.hostid) {
