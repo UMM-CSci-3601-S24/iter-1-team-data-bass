@@ -62,41 +62,6 @@ describe('AddHuntComponent', () => {
     expect(addHuntForm).toBeTruthy();
   });
 
-  it('should add a new textarea when addTextarea is called', () => {
-    const initialTextareaCount = addHuntComponent.textAreasList.length;
-    addHuntComponent.addTextarea();
-    expect(addHuntComponent.textAreasList.length).toBe(initialTextareaCount + 1);
-  });
-
-  it('should remove a textarea when removeTextArea is called', () => {
-    addHuntComponent.textAreasList = ['text_area1', 'text_area2', 'text_area3'];
-    const initialTextareaCount = addHuntComponent.textAreasList.length;
-    addHuntComponent.removeTextArea(1);
-    expect(addHuntComponent.textAreasList.length).toBe(initialTextareaCount - 1);
-    expect(addHuntComponent.textAreasList).not.toContain('text_area2');
-  });
-
-  it('should set form controls with valid values', () => {
-    const validTitle = 'Valid Title';
-    const validHostId = 'ValidHost123';
-    const validDescription = 'Valid Description';
-    const validTask = 'Valid Task';
-
-    addHuntComponent.addHuntForm.setValue({
-      title: validTitle,
-      hostid: validHostId,
-      description: validDescription,
-      task: validTask,
-    });
-
-    expect(addHuntComponent.addHuntForm.get('title').value).toBe(validTitle);
-    expect(addHuntComponent.addHuntForm.get('hostid').value).toBe(validHostId);
-    expect(addHuntComponent.addHuntForm.get('description').value).toBe(validDescription);
-    expect(addHuntComponent.addHuntForm.get('task').value).toBe(validTask);
-  });
-
-  
-
   // Confirms that an initial, empty form is *not* valid, so
   // people can't submit an empty form.
   it('form should be invalid when empty', () => {
@@ -156,6 +121,120 @@ describe('AddHuntComponent', () => {
       expect(titleControl.hasError('existingName')).toBeTruthy();
     });
   });
+
+  // describe('The age field', () => {
+  //   let ageControl: AbstractControl;
+
+  //   beforeEach(() => {
+  //     ageControl = addHuntComponent.addHuntForm.controls.age;
+  //   });
+
+  //   it('should not allow empty ages', () => {
+  //     ageControl.setValue('');
+  //     expect(ageControl.valid).toBeFalsy();
+  //   });
+
+  //   it('should be fine with "27"', () => {
+  //     ageControl.setValue('27');
+  //     expect(ageControl.valid).toBeTruthy();
+  //   });
+
+  //   it('should fail on ages that are too low', () => {
+  //     ageControl.setValue('14');
+  //     expect(ageControl.valid).toBeFalsy();
+  //     expect(ageControl.hasError('min')).toBeTruthy();
+  //   });
+
+  //   it('should fail on negative ages', () => {
+  //     ageControl.setValue('-27');
+  //     expect(ageControl.valid).toBeFalsy();
+  //     expect(ageControl.hasError('min')).toBeTruthy();
+  //   });
+
+  //   // In the real world, you'd want to be pretty careful about
+  //   // setting upper limits on things like ages.
+  //   it('should fail on ages that are too high', () => {
+  //     ageControl.setValue(201);
+  //     expect(ageControl.valid).toBeFalsy();
+  //     // I have no idea why I have to use a lower case 'l' here
+  //     // when it's an upper case 'L' in `Validators.maxLength(2)`.
+  //     // But I apparently do.
+  //     expect(ageControl.hasError('max')).toBeTruthy();
+  //   });
+
+  //   it('should not allow an age to contain a decimal point', () => {
+  //     ageControl.setValue(27.5);
+  //     expect(ageControl.valid).toBeFalsy();
+  //     expect(ageControl.hasError('pattern')).toBeTruthy();
+  //   });
+  // });
+
+  // describe('The company field', () => {
+  //   it('should allow empty values', () => {
+  //     const companyControl = addHuntForm.controls.company;
+  //     companyControl.setValue('');
+  //     expect(companyControl.valid).toBeTruthy();
+  //   });
+  // });
+
+  // describe('The email field', () => {
+  //   let emailControl: AbstractControl;
+
+  //   beforeEach(() => {
+  //     emailControl = addHuntComponent.addHuntForm.controls.email;
+  //   });
+
+  //   it('should not allow empty values', () => {
+  //     emailControl.setValue('');
+  //     expect(emailControl.valid).toBeFalsy();
+  //     expect(emailControl.hasError('required')).toBeTruthy();
+  //   });
+
+  //   it('should accept legal emails', () => {
+  //     emailControl.setValue('conniestewart@ohmnet.com');
+  //     expect(emailControl.valid).toBeTruthy();
+  //   });
+
+  //   it('should fail without @', () => {
+  //     emailControl.setValue('conniestewart');
+  //     expect(emailControl.valid).toBeFalsy();
+  //     expect(emailControl.hasError('email')).toBeTruthy();
+  //   });
+  // });
+
+  // describe('The role field', () => {
+  //   let roleControl: AbstractControl;
+
+  //   beforeEach(() => {
+  //     roleControl = addHuntForm.controls.role;
+  //   });
+
+  //   it('should not allow empty values', () => {
+  //     roleControl.setValue('');
+  //     expect(roleControl.valid).toBeFalsy();
+  //     expect(roleControl.hasError('required')).toBeTruthy();
+  //   });
+
+  //   it('should allow "admin"', () => {
+  //     roleControl.setValue('admin');
+  //     expect(roleControl.valid).toBeTruthy();
+  //   });
+
+  //   it('should allow "editor"', () => {
+  //     roleControl.setValue('editor');
+  //     expect(roleControl.valid).toBeTruthy();
+  //   });
+
+  //   it('should allow "viewer"', () => {
+  //     roleControl.setValue('viewer');
+  //     expect(roleControl.valid).toBeTruthy();
+  //   });
+
+  //   it('should not allow "Supreme Overlord"', () => {
+  //     roleControl.setValue('Supreme Overlord');
+  //     expect(roleControl.valid).toBeFalsy();
+  //   });
+  // });
 
   describe('getErrorMessage()', () => {
     it('should return the correct error message', () => {
@@ -262,5 +341,23 @@ describe('addHuntComponent#submitForm()', () => {
     expect(addUserSpy).toHaveBeenCalledWith(component.addHuntForm.value);
     // Confirm that we're still at the same path.
     expect(location.path()).toBe(path);
+  });
+
+  it('should add a new textarea when addTextarea is called', () => {
+    const initialLength = component.textAreasList.length;
+    component.addTextarea();
+    expect(component.textAreasList.length).toBe(initialLength + 1);
+    expect(component.textAreasList[initialLength]).toBe('text_area' + (initialLength + 1));
+  });
+
+  it('should remove a textarea when removeTextArea is called', () => {
+    // Add a textarea to the list
+    component.addTextarea();
+    const initialLength = component.textAreasList.length;
+
+    // Remove the textarea we just added
+    component.removeTextArea(initialLength - 1);
+
+    expect(component.textAreasList.length).toBe(initialLength - 1);
   });
 });

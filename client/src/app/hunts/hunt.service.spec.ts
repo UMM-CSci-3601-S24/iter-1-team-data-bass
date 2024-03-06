@@ -74,4 +74,17 @@ describe ('HuntService', () => {
     expect(req.request.method).toEqual('GET');
     req.flush(targetHunt);
   });
+
+  // testing filters.hostid
+  it('getHunts() calls api/hunts with filter parameter \'hostid\'', () => {
+    const targetHunt: Hunt = testHunts[0];
+    const hostidFilter = { hostid: targetHunt.hostid, task: '', description: '' }; // Add missing properties
+    huntService.getHunts(hostidFilter).subscribe(
+      hunts => expect(hunts).toEqual([targetHunt])
+    );
+
+    const req = httpTestingController.expectOne(req => req.url.includes('hostid') && req.url.includes(targetHunt.hostid));
+    expect(req.request.method).toEqual('GET');
+    req.flush([targetHunt]);
+  });
 });
